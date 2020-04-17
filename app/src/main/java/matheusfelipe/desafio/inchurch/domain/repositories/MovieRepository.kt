@@ -4,6 +4,6 @@ import matheusfelipe.desafio.inchurch.domain.entities.Genre
 import matheusfelipe.desafio.inchurch.domain.entities.Movie
 
 interface MovieRepository {
-   fun getAllMovies(): List<Movie>
-   fun getAllMoviesGenres(): List<Genre>
+   suspend fun getAllMovies(): List<Movie>
+   suspend fun getAllMoviesGenres(): List<Genre>
 }
