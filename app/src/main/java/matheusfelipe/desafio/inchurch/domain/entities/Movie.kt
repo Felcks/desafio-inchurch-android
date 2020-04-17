@@ -1,6 +1,6 @@
 package matheusfelipe.desafio.inchurch.domain.entities
 
-import java.time.ZonedDateTime
+import java.util.*
 
 data class Movie(
     val id: Int,
@@ -10,7 +10,7 @@ data class Movie(
     val posterPath: String,
     val isAdult: Boolean,
     val overview: String,
-    val releaseDate: ZonedDateTime,
+    val releaseDate: Date,
     val popularity: Double,
     val voteCount: Int,
     val video: Boolean,
