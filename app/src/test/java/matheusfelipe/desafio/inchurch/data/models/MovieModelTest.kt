@@ -67,6 +67,4 @@ class MovieModelTest {
         // assert
         Assert.assertEquals(tMovieModel, result)
     }
-
-
 }
