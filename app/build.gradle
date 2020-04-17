@@ -75,6 +75,9 @@ dependencies {
 
     /* Zoom */
     implementation 'com.github.chrisbanes:PhotoView:2.1.2'
+
+    /* Mockk */
+    testImplementation "io.mockk:mockk:1.9.3"
 }
 
 repositories {

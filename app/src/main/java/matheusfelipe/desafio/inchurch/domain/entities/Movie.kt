@@ -14,4 +14,11 @@ data class Movie(val id: Int,
                  val voteCount: Int,
                  val video: Boolean,
                  val voteAverage: Double,
-                 val genreIds: List<Int>)
+                 var genreIds: List<Int>){
+
+    fun getGenres(allGenres: List<Genre>): List<Genre>{
+        return allGenres.filter {
+            genreIds.contains(it.id)
+        }
+    }
+}
