@@ -8,8 +8,8 @@ import org.junit.Test
 
 class PageModelTest {
 
-    private lateinit var tPageModelEmpty: PageModel
-    private lateinit var tPageModel: PageModel
+    private lateinit var tPageModelEmpty: PageModel<MovieModel>
+    private lateinit var tPageModel: PageModel<MovieModel>
     private lateinit var tMovieModel: MovieModel
 
     @Before
@@ -38,7 +38,7 @@ class PageModelTest {
             total_pages = 1
         );
 
-        tPageModel = PageModel(
+        tPageModel = PageModel<MovieModel>(
             page = 1,
             results = listOf(
                 tMovieModel
@@ -52,7 +52,7 @@ class PageModelTest {
     fun `should return a valid model when JSON is ok`(){
         // arrange
         // act
-        val result = Gson().fromJson<PageModel>(readJsonFile("page.json"), PageModel::class.java)
+        val result = Gson().fromJson<PageModel<MovieModel>>(readJsonFile("page_movie.json"), PageModel::class.java)
         // assert
         Assert.assertEquals(tPageModel, result)
     }
@@ -61,7 +61,7 @@ class PageModelTest {
     fun `should return a valid model when JSON is ok but empty`(){
         // arrange
         // act
-        val result = Gson().fromJson<PageModel>(readJsonFile("page_empty.json"), PageModel::class.java)
+        val result = Gson().fromJson<PageModel<MovieModel>>(readJsonFile("page_empty.json"), PageModel::class.java)
         // assert
         Assert.assertEquals(tPageModelEmpty, result)
     }
