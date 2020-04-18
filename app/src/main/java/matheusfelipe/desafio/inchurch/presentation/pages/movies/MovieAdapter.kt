@@ -6,7 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_movie_simple.view.*
+import matheusfelipe.desafio.inchurch.BuildConfig
 import matheusfelipe.desafio.inchurch.R
+import matheusfelipe.desafio.inchurch.core.App
 import matheusfelipe.desafio.inchurch.domain.entities.Movie
 
 class MovieAdapter(private val movieList: MutableList<Movie>): RecyclerView.Adapter<MovieAdapter.MyViewHolder>() {
@@ -23,6 +25,7 @@ class MovieAdapter(private val movieList: MutableList<Movie>): RecyclerView.Adap
         val item = movieList[position]
 
         holder.itemView.tv_title.text = item.title
+        Picasso.with(App.instance).load("${BuildConfig.IMAGE_URL}${item.posterPath}").into(holder.itemView.iv_poster)
         //holder.itemView.tv
     }
 
