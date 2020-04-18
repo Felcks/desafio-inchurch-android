@@ -31,10 +31,18 @@ class MovieRepositoryImpl(private val remoteDataSource: MovieRemoteDataSource,
     }
 
     override suspend fun favoriteOrDisfavorMovie(movie: Movie) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        var favoriteMovies = localDataSource.getCachedFavoriteMovies()
+        if(favoriteMovies.firstOrNull { it.id == movie.id } == null){
+            favoriteMovies = favoriteMovies.toMutableList().apply { this.add(movie) }
+            localDataSource.cacheFavoriteMovies(favoriteMovies)
+        }
+        else{
+            favoriteMovies = favoriteMovies.toMutableList().apply { this.removeAll { it.id == movie.id } }
+            localDataSource.cacheFavoriteMovies(favoriteMovies)
+        }
     }
 
     override suspend fun getFavoriteMovies(): List<Movie> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return localDataSource.getCachedFavoriteMovies()
     }
 }

@@ -7,9 +7,9 @@ object InCacheDao {
 
     private var movieDetail: MovieModel? = null
 
-    suspend fun getChachedMovie(): MovieModel? = this.movieDetail
+    fun getChachedMovie(): MovieModel? = this.movieDetail
 
-    suspend fun cacheMovie(movie: MovieModel){
+    fun cacheMovie(movie: MovieModel){
         this.movieDetail = movie
     }
 }

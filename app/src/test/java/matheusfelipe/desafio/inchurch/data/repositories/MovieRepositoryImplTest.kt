@@ -2,6 +2,7 @@ package matheusfelipe.desafio.inchurch.data.repositories
 
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
@@ -201,4 +202,63 @@ class MovieRepositoryImplTest {
         }
     }
 
+    @Test
+    fun `getFavoriteMovies - should return cachedListMovie when there is favorite movies`() = runBlocking {
+        // arrange
+        val listMockedMovies = listOf<Movie>(mockk(), mockk())
+        coEvery { mockLocalDataSource.getCachedFavoriteMovies() } returns listMockedMovies
+        // act
+        val result = movieRepository.getFavoriteMovies()
+        // assert
+        assertEquals(listMockedMovies, result)
+        coVerify(exactly = 1) {
+            mockLocalDataSource.getCachedFavoriteMovies()
+        }
+    }
+
+    @Test
+    fun `favoriteOrDisfavorMovie - should call dataSource with incremented list when is for add`() = runBlocking {
+        // arrange
+        val tMockMovie1 = mockk<Movie>()
+        val tMockMovie2 = mockk<Movie>()
+        every { tMockMovie1.id } returns 1
+        every { tMockMovie2.id } returns 2
+
+        val tMockMovieToAdd = mockk<Movie>()
+        every { tMockMovieToAdd.id } returns 3
+
+        val listMockedMovies = listOf(tMockMovie1, tMockMovie2)
+        coEvery { mockLocalDataSource.getCachedFavoriteMovies() } returns listMockedMovies
+        coEvery { mockLocalDataSource.cacheFavoriteMovies(any()) } returns Unit
+        // act
+        async { movieRepository.favoriteOrDisfavorMovie(tMockMovieToAdd) }.await()
+        // assert
+        coVerify(exactly = 1) {
+            mockLocalDataSource.getCachedFavoriteMovies()
+            mockLocalDataSource.cacheFavoriteMovies(listOf(tMockMovie1, tMockMovie2, tMockMovieToAdd))
+        }
+    }
+
+    @Test
+    fun `favoriteOrDisfavorMovie - should call dataSource with decremented list when is for remove`() = runBlocking {
+        // arrange
+        val tMockMovie1 = mockk<Movie>()
+        val tMockMovie2 = mockk<Movie>()
+        every { tMockMovie1.id } returns 1
+        every { tMockMovie2.id } returns 2
+
+        val tMockMovieToRemove = mockk<Movie>()
+        every { tMockMovieToRemove.id } returns 1
+
+        val listMockedMovies = listOf(tMockMovie1, tMockMovie2)
+        coEvery { mockLocalDataSource.getCachedFavoriteMovies() } returns listMockedMovies
+        coEvery { mockLocalDataSource.cacheFavoriteMovies(any()) } returns Unit
+        // act
+        async { movieRepository.favoriteOrDisfavorMovie(tMockMovieToRemove) }.await()
+        // assert
+        coVerify(exactly = 1) {
+            mockLocalDataSource.getCachedFavoriteMovies()
+            mockLocalDataSource.cacheFavoriteMovies(listOf(tMockMovie2))
+        }
+    }
 }
