@@ -57,12 +57,20 @@ class MoviesActivity : AppCompatActivity() {
 
     private fun showError(throwable: Throwable?){
         pg_loading.visibility = View.GONE
-        Log.i("script2", throwable?.message)
-//        tv_hello_world.text = throwable?.message ?: "Unexpected error"
+        tv_error.text = throwable?.message
+        tv_error.visibility = View.VISIBLE
     }
 
     private fun onItemClick(movie: Movie){
-        val intent = Intent(this, MovieDetailActivity::class.java)
-        startActivity(intent)
+
+        viewModel.selectDetailMovieResponse().observe(this, Observer { response ->
+            if(response.status == Status.SUCCESS) {
+                val intent = Intent(this, MovieDetailActivity::class.java)
+                startActivity(intent)
+            }
+         })
+        viewModel.selectDetailMovie(movie)
+
+
     }
 }

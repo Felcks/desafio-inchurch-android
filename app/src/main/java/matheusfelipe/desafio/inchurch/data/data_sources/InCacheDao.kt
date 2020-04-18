@@ -1,5 +1,6 @@
 package matheusfelipe.desafio.inchurch.data.data_sources
 
+import android.util.Log
 import matheusfelipe.desafio.inchurch.data.models.MovieModel
 
 object InCacheDao {
@@ -10,5 +11,6 @@ object InCacheDao {
 
     suspend fun cacheMovie(movie: MovieModel){
         this.movieDetail = movie
+        Log.i("script2", this.movieDetail.toString())
     }
 }
