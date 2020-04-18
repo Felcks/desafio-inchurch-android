@@ -75,6 +75,7 @@ class MovieRepositoryImplTest {
             voteCount = 1466,
             video = false,
             voteAverage = 5.91,
+            backdropPath = "/ndlQ2Cuc3cjTL7lTynw6I4boP4S.jpg",
             genreIds = listOf(14, 28, 80)
         )
 

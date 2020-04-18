@@ -15,6 +15,7 @@ data class Movie(
     val voteCount: Int,
     val video: Boolean,
     val voteAverage: Double,
+    val backdropPath: String,
     var genreIds: List<Int>
 ) {
 

@@ -37,6 +37,7 @@ data class MovieModel(
             popularity = popularity,
             voteCount = vote_count,
             video = video,
+            backdropPath = backdrop_path,
             voteAverage = vote_average
 
         )
