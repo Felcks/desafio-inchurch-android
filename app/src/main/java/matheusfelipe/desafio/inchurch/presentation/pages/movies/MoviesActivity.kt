@@ -1,9 +1,10 @@
-package matheusfelipe.desafio.inchurch
+package matheusfelipe.desafio.inchurch.presentation.pages.movies
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import matheusfelipe.desafio.inchurch.R
 
-class MainActivity : AppCompatActivity() {
+class MoviesActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

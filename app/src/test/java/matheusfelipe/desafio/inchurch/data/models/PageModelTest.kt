@@ -2,9 +2,14 @@ package matheusfelipe.desafio.inchurch.data.models
 
 import br.com.mobfiq.search.core.readJsonFile
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
+import io.mockk.mockk
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+
 
 class PageModelTest {
 
@@ -51,8 +56,9 @@ class PageModelTest {
     @Test
     fun `should return a valid model when JSON is ok`(){
         // arrange
+        val type = object : TypeToken<PageModel<MovieModel>>() {}.type
         // act
-        val result = Gson().fromJson<PageModel<MovieModel>>(readJsonFile("page_movie.json"), PageModel::class.java)
+        val result = Gson().fromJson<PageModel<MovieModel>>(readJsonFile("page_movie.json"), type)
         // assert
         Assert.assertEquals(tPageModel, result)
     }
