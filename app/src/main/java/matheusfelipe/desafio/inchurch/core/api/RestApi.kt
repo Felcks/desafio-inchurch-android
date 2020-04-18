@@ -31,28 +31,6 @@ object RestApi {
             .addConverterFactory(MoshiConverterFactory.create().asLenient())
             .client(client)
             .build()
-
     }
 }
 
-class NetworkConnectionInterceptor(context: Context) : Interceptor {
-    private val mContext: Context = context
-
-    override fun intercept(chain: Interceptor.Chain): Response {
-        if (!isConnected) {
-            throw NoConnectivityException()
-            // Throwing our custom exception 'NoConnectivityException'
-        }
-        val builder: Request.Builder = chain.request().newBuilder()
-        return chain.proceed(builder.build())
-    }
-
-    val isConnected: Boolean
-        get() {
-            val connectivityManager =
-                mContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            val netInfo = connectivityManager.activeNetworkInfo
-            return netInfo != null && netInfo.isConnected
-        }
-
-}

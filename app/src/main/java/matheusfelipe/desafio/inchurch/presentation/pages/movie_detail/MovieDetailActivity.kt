@@ -35,6 +35,8 @@ class MovieDetailActivity : AppCompatActivity() {
         viewModel.detailMovie().observe(this, Observer { response -> processResponse(response) })
         viewModel.genres().observe(this, Observer { response -> processResponse(response) })
         viewModel.favoriteOrDisfavorMovieResponse().observe(this, Observer { response -> processResponse(response) })
+
+        toolbar.title = ""
     }
 
     private fun processResponse(response: Response) {
