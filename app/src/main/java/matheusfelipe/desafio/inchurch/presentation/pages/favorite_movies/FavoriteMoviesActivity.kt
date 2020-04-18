@@ -8,7 +8,8 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.GridLayoutManager
+import kotlinx.android.synthetic.main.activity_favorite_movies.*
+import matheusfelipe.desafio.inchurch.R
 import matheusfelipe.desafio.inchurch.core.utils.Response
 import matheusfelipe.desafio.inchurch.core.utils.Status
 
@@ -18,6 +19,7 @@ class FavoriteMoviesActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_favorite_movies)
 
         viewModel = ViewModelProviders.of(this)[FavoriteMoviesViewModel::class.java]
         viewModel.movies().observe(this, Observer { response -> processResponse(response) })
@@ -33,29 +35,35 @@ class FavoriteMoviesActivity: AppCompatActivity() {
     }
 
     private fun showLoading(){
-        //pg_loading.visibility = View.VISIBLE
+        pg_loading.visibility = View.VISIBLE
     }
 
     private fun showMovies(data: Any?){
 
-//        pg_loading.visibility = View.GONE
-//
+        pg_loading.visibility = View.GONE
+
         if(data is List<*>) {
-            Log.i("script2", data.size.toString())
-        }
-//
+
+            if(data.isEmpty()) {
+                showError(Throwable("Lista de filmes favoritos vazia"))
+                return
+            }
+
+            //Desenhar o adapter
 //            movieAdapter = MovieAdapter(data.filterIsInstance<Movie>().toMutableList(), ::onItemClick, ::onFavoriteClick)
 //
 //            val layoutManager = GridLayoutManager(this, 2)
 //            rv_movies.layoutManager = layoutManager
 //            rv_movies.adapter = movieAdapter
-//        }
+
+            Log.i("script2", data.size.toString())
+        }
     }
 
     private fun showError(throwable: Throwable?){
-//        pg_loading.visibility = View.GONE
-//        tv_error.text = throwable?.message
-//        tv_error.visibility = View.VISIBLE
+        pg_loading.visibility = View.GONE
+        tv_error.text = throwable?.message
+        tv_error.visibility = View.VISIBLE
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
