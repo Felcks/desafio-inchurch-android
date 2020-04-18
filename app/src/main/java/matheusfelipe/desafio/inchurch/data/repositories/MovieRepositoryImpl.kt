@@ -33,16 +33,18 @@ class MovieRepositoryImpl(private val remoteDataSource: MovieRemoteDataSource,
     override suspend fun favoriteOrDisfavorMovie(movie: Movie) {
         var favoriteMovies = localDataSource.getCachedFavoriteMovies()
         if(favoriteMovies.firstOrNull { it.id == movie.id } == null){
-            favoriteMovies = favoriteMovies.toMutableList().apply { this.add(movie) }
+            favoriteMovies = favoriteMovies.apply { this.add(MovieModel.fromEntity(movie)) }
             localDataSource.cacheFavoriteMovies(favoriteMovies)
         }
         else{
-            favoriteMovies = favoriteMovies.toMutableList().apply { this.removeAll { it.id == movie.id } }
+            favoriteMovies = favoriteMovies.apply { this.removeAll { it.id == movie.id } }
             localDataSource.cacheFavoriteMovies(favoriteMovies)
         }
     }
 
     override suspend fun getFavoriteMovies(): List<Movie> {
-        return localDataSource.getCachedFavoriteMovies()
+        return localDataSource.getCachedFavoriteMovies().map {
+            it.toEntity()
+        }
     }
 }

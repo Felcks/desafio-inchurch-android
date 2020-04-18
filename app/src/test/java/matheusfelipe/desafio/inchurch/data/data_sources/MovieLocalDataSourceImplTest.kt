@@ -61,4 +61,33 @@ class MovieLocalDataSourceImplTest {
             InCacheDao.cacheMovie(tMovieMocked)
         }
     }
+
+    @Test
+    fun `getCachedFavoriteMovies - should return cachedFavoriteMovies`()  = runBlocking{
+        // arrange
+        val moviesList = mutableListOf<MovieModel>(mockk(), mockk())
+        mockkObject(InCacheDao)
+        coEvery() { InCacheDao.getCachedFavoriteMovies() } returns moviesList
+        // act
+        val result = movieLocalDataSourceImpl.getCachedFavoriteMovies()
+        // assert
+        assertEquals(moviesList, result)
+        coVerify(exactly = 1) {
+            InCacheDao.getCachedFavoriteMovies()
+        }
+    }
+
+    @Test
+    fun `cacheFavoriteMovies - should call InCacheDao with correct parameters`() = runBlocking{
+        // arrange
+        val moviesList = mutableListOf<MovieModel>(mockk(), mockk())
+        mockkObject(InCacheDao)
+        coEvery() { InCacheDao.setCachedFavoriteMovies(any()) } returns Unit
+        // act
+        movieLocalDataSourceImpl.cacheFavoriteMovies(moviesList)
+        // assert
+        coVerify(exactly = 1) {
+            InCacheDao.setCachedFavoriteMovies(moviesList)
+        }
+    }
 }

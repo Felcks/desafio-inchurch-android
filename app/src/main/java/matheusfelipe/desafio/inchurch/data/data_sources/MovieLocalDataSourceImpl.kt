@@ -14,11 +14,11 @@ class MovieLocalDataSourceImpl: MovieLocalDataSource {
         return InCacheDao.getChachedMovie() ?: throw ResourceNotFoundThrowable()
     }
 
-    override suspend fun cacheFavoriteMovies(movies: List<Movie>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override suspend fun cacheFavoriteMovies(movies: MutableList<MovieModel>) {
+        InCacheDao.setCachedFavoriteMovies(movies.toMutableList())
     }
 
-    override suspend fun getCachedFavoriteMovies(): List<Movie> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override suspend fun getCachedFavoriteMovies(): MutableList<MovieModel> {
+        return InCacheDao.getCachedFavoriteMovies()
     }
 }

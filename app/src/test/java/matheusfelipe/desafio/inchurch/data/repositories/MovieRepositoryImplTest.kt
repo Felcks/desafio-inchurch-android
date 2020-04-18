@@ -1,9 +1,6 @@
 package matheusfelipe.desafio.inchurch.data.repositories
 
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.every
-import io.mockk.mockk
+import io.mockk.*
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import matheusfelipe.desafio.inchurch.core.exceptions.InvalidApiKeyThrowable
@@ -205,8 +202,21 @@ class MovieRepositoryImplTest {
     @Test
     fun `getFavoriteMovies - should return cachedListMovie when there is favorite movies`() = runBlocking {
         // arrange
-        val listMockedMovies = listOf<Movie>(mockk(), mockk())
-        coEvery { mockLocalDataSource.getCachedFavoriteMovies() } returns listMockedMovies
+        val tMockMovie1 = mockk<Movie>()
+        val tMockMovie2 = mockk<Movie>()
+        every { tMockMovie1.id } returns 1
+        every { tMockMovie2.id } returns 2
+        val listMockedMovies = mutableListOf<Movie>(tMockMovie1, tMockMovie2)
+
+        val tMockMovieModel1 = mockk<MovieModel>()
+        val tMockMovieModel2 = mockk<MovieModel>()
+        every { tMockMovieModel1.id } returns 1
+        every { tMockMovieModel1.toEntity() } returns tMockMovie1
+        every { tMockMovieModel2.id } returns 2
+        every { tMockMovieModel2.toEntity() } returns tMockMovie2
+        val listMockedMoviesModel = mutableListOf<MovieModel>(tMockMovieModel1, tMockMovieModel2)
+
+        coEvery { mockLocalDataSource.getCachedFavoriteMovies() } returns listMockedMoviesModel
         // act
         val result = movieRepository.getFavoriteMovies()
         // assert
@@ -219,15 +229,21 @@ class MovieRepositoryImplTest {
     @Test
     fun `favoriteOrDisfavorMovie - should call dataSource with incremented list when is for add`() = runBlocking {
         // arrange
-        val tMockMovie1 = mockk<Movie>()
-        val tMockMovie2 = mockk<Movie>()
+        val tMockMovie1 = mockk<MovieModel>()
+        val tMockMovie2 = mockk<MovieModel>()
         every { tMockMovie1.id } returns 1
         every { tMockMovie2.id } returns 2
+
+        val tMockMovie3 = mockk<MovieModel>() //Not added to cached favorites
+        every { tMockMovie3.id } returns 3
 
         val tMockMovieToAdd = mockk<Movie>()
         every { tMockMovieToAdd.id } returns 3
 
-        val listMockedMovies = listOf(tMockMovie1, tMockMovie2)
+        mockkObject(MovieModel.Companion)
+        every { MovieModel.fromEntity(any()) } returns tMockMovie3
+
+        val listMockedMovies = mutableListOf(tMockMovie1, tMockMovie2)
         coEvery { mockLocalDataSource.getCachedFavoriteMovies() } returns listMockedMovies
         coEvery { mockLocalDataSource.cacheFavoriteMovies(any()) } returns Unit
         // act
@@ -235,22 +251,22 @@ class MovieRepositoryImplTest {
         // assert
         coVerify(exactly = 1) {
             mockLocalDataSource.getCachedFavoriteMovies()
-            mockLocalDataSource.cacheFavoriteMovies(listOf(tMockMovie1, tMockMovie2, tMockMovieToAdd))
+            mockLocalDataSource.cacheFavoriteMovies(mutableListOf(tMockMovie1, tMockMovie2, tMockMovie3))
         }
     }
 
     @Test
     fun `favoriteOrDisfavorMovie - should call dataSource with decremented list when is for remove`() = runBlocking {
         // arrange
-        val tMockMovie1 = mockk<Movie>()
-        val tMockMovie2 = mockk<Movie>()
+        val tMockMovie1 = mockk<MovieModel>()
+        val tMockMovie2 = mockk<MovieModel>()
         every { tMockMovie1.id } returns 1
         every { tMockMovie2.id } returns 2
 
         val tMockMovieToRemove = mockk<Movie>()
         every { tMockMovieToRemove.id } returns 1
 
-        val listMockedMovies = listOf(tMockMovie1, tMockMovie2)
+        val listMockedMovies = mutableListOf(tMockMovie1, tMockMovie2)
         coEvery { mockLocalDataSource.getCachedFavoriteMovies() } returns listMockedMovies
         coEvery { mockLocalDataSource.cacheFavoriteMovies(any()) } returns Unit
         // act
@@ -258,7 +274,7 @@ class MovieRepositoryImplTest {
         // assert
         coVerify(exactly = 1) {
             mockLocalDataSource.getCachedFavoriteMovies()
-            mockLocalDataSource.cacheFavoriteMovies(listOf(tMockMovie2))
+            mockLocalDataSource.cacheFavoriteMovies(mutableListOf(tMockMovie2))
         }
     }
 }
