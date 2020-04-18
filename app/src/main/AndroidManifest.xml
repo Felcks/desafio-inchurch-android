@@ -30,7 +30,7 @@
 
         <activity
             android:name=".presentation.pages.favorite_movies.FavoriteMoviesActivity"
-            android:label="Filmes - Favoritos">
+            android:label="Filmes Favoritos">
         </activity>
     </application>
 

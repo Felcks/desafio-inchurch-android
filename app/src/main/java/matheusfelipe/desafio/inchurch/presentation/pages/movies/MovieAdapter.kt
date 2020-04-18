@@ -31,7 +31,7 @@ class MovieAdapter(
 
         holder.itemView.tv_title.text = item.title
         Picasso.with(App.instance).load("${BuildConfig.IMAGE_URL}${item.posterPath}").into(holder.itemView.iv_poster)
-        holder.itemView.setOnClickListener {
+        holder.itemView.iv_poster.setOnClickListener {
             onClick(item)
         }
         holder.itemView.iv_fav.setOnClickListener {

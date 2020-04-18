@@ -1,5 +1,6 @@
 package matheusfelipe.desafio.inchurch.presentation.pages.favorite_movies
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +13,7 @@ import matheusfelipe.desafio.inchurch.core.App
 import matheusfelipe.desafio.inchurch.domain.entities.Movie
 import java.text.SimpleDateFormat
 
-class FavoriteMoviesAdapter (private val movieList: MutableList<Movie>,
+class FavoriteMoviesAdapter (private var movieList: MutableList<Movie>,
                              private val onClick: (movie: Movie) -> Unit): RecyclerView.Adapter<FavoriteMoviesAdapter.MyViewHolder>() {
 
     private val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy")
@@ -35,6 +36,12 @@ class FavoriteMoviesAdapter (private val movieList: MutableList<Movie>,
         holder.itemView.setOnClickListener {
             onClick(item)
         }
+    }
+
+    fun updateAllItems(list: MutableList<Movie>) {
+        this.movieList = list
+        Log.i("script2", list.size.toString())
+        notifyDataSetChanged()
     }
 
     class MyViewHolder(view: View): RecyclerView.ViewHolder(view)

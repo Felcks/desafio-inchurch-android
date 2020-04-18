@@ -13,11 +13,12 @@ import matheusfelipe.desafio.inchurch.data.data_sources.MovieLocalDataSourceImpl
 import matheusfelipe.desafio.inchurch.data.data_sources.MovieRemoteDataSource
 import matheusfelipe.desafio.inchurch.data.data_sources.MovieRemoteDataSourceImpl
 import matheusfelipe.desafio.inchurch.data.repositories.MovieRepositoryImpl
+import matheusfelipe.desafio.inchurch.domain.entities.Movie
 import matheusfelipe.desafio.inchurch.domain.repositories.MovieRepository
 import matheusfelipe.desafio.inchurch.domain.usecases.GetFavoriteMovies
 import matheusfelipe.desafio.inchurch.domain.usecases.SelectDetailMovie
 
-class FavoriteMoviesViewModel: ViewModel() {
+class FavoriteMoviesViewModel : ViewModel() {
 
     private lateinit var movieRemoteDataSource: MovieRemoteDataSource
     private lateinit var movieLocalDataSource: MovieLocalDataSource
@@ -27,6 +28,9 @@ class FavoriteMoviesViewModel: ViewModel() {
 
     private var movies: MutableLiveData<Response> = MutableLiveData()
     fun movies() = movies
+
+    private var selectDetailMovieResponse: MutableLiveData<Response> = MutableLiveData()
+    fun selectDetailMovieResponse() = selectDetailMovieResponse
 
     init {
         val api = RestApi.getRetrofit().create(MovieApi::class.java)
@@ -39,11 +43,11 @@ class FavoriteMoviesViewModel: ViewModel() {
         fetchFavoriteMovies()
     }
 
-    private fun fetchFavoriteMovies() {
+    fun fetchFavoriteMovies() {
 
         movies.postValue(Response.loading())
         CoroutineScope(Dispatchers.IO).launch {
-            try{
+            try {
                 val result = getFavoriteMoviesUseCase()
                 movies.postValue(Response.success(result))
             } catch (t: Throwable) {
@@ -51,4 +55,14 @@ class FavoriteMoviesViewModel: ViewModel() {
             }
         }
     }
+
+    fun selectDetailMovie(movie: Movie) {
+
+        selectDetailMovieResponse.postValue(Response.loading())
+        CoroutineScope(Dispatchers.IO).launch {
+            selectDetailMovieUseCase(movie)
+            selectDetailMovieResponse.postValue(Response.success(true))
+        }
+    }
+
 }
