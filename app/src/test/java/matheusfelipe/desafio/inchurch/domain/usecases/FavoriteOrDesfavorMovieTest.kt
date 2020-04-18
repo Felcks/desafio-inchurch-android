@@ -2,6 +2,7 @@ package matheusfelipe.desafio.inchurch.domain.usecases
 
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
@@ -24,11 +25,12 @@ class FavoriteOrDesfavorMovieTest {
     }
 
     @Test
-    fun `should return call favorite movie from the repository`() = runBlocking {
+    fun `should call favorite movie from the repository`() = runBlocking {
         // arrange
-        coEvery { mockMovieRepository.favoriteOrDisfavorMovie(any()) } returns Unit
+        every { tMockMovie.isFavorite } returns true
+        coEvery { mockMovieRepository.favoriteOrDisfavorMovie(any()) } returns tMockMovie
         // act
-        val result = async { usecase(tMockMovie) }.await()
+        val result = usecase(tMockMovie)
         // assert
         coVerify(exactly = 1) {
             mockMovieRepository.favoriteOrDisfavorMovie(tMockMovie)

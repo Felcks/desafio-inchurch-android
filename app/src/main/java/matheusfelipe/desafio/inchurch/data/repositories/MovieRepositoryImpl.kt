@@ -11,9 +11,17 @@ class MovieRepositoryImpl(private val remoteDataSource: MovieRemoteDataSource,
                           private val localDataSource: MovieLocalDataSource): MovieRepository {
 
     override suspend fun getAllMovies(): List<Movie> {
-        return remoteDataSource.getAllMovies().results.map {
+        val movieList = remoteDataSource.getAllMovies().results.map {
             it.toEntity()
         }
+
+        val favoriteList = localDataSource.getCachedFavoriteMovies()
+        for(movie in movieList){
+            if(favoriteList.firstOrNull { it.id == movie.id } != null)
+                movie.isFavorite = true
+        }
+
+        return movieList
     }
 
     override suspend fun getAllMoviesGenres(): List<Genre> {
@@ -30,15 +38,17 @@ class MovieRepositoryImpl(private val remoteDataSource: MovieRemoteDataSource,
         return localDataSource.getCachedDetailMovie().toEntity()
     }
 
-    override suspend fun favoriteOrDisfavorMovie(movie: Movie) {
+    override suspend fun favoriteOrDisfavorMovie(movie: Movie): Movie {
         var favoriteMovies = localDataSource.getCachedFavoriteMovies()
         if(favoriteMovies.firstOrNull { it.id == movie.id } == null){
             favoriteMovies = favoriteMovies.apply { this.add(MovieModel.fromEntity(movie)) }
             localDataSource.cacheFavoriteMovies(favoriteMovies)
+            return movie.apply { this.isFavorite = true }
         }
         else{
             favoriteMovies = favoriteMovies.apply { this.removeAll { it.id == movie.id } }
             localDataSource.cacheFavoriteMovies(favoriteMovies)
+            return movie.apply { this.isFavorite = false }
         }
     }
 

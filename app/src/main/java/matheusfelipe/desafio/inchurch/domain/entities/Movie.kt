@@ -18,6 +18,7 @@ data class Movie(
     val backdropPath: String,
     var genreIds: List<Int>
 ) {
+    var isFavorite: Boolean = false
 
     fun getGenres(allGenres: List<Genre>): List<Genre> {
         return allGenres.filter {

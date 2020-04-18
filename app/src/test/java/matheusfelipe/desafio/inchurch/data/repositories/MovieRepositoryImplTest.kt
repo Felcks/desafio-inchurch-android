@@ -98,6 +98,7 @@ class MovieRepositoryImplTest {
     fun `getAllMovies - should return movie data when response is successfull`() = runBlocking{
         // arrange
         coEvery { mockRemoteDataSource.getAllMovies() } returns tPageModel
+        coEvery { mockLocalDataSource.getCachedFavoriteMovies() } returns mutableListOf()
         // act
         val result = async {movieRepository.getAllMovies()}.await()
         // assert
@@ -244,6 +245,7 @@ class MovieRepositoryImplTest {
         every { MovieModel.fromEntity(any()) } returns tMockMovie3
 
         val listMockedMovies = mutableListOf(tMockMovie1, tMockMovie2)
+        every { tMockMovieToAdd::isFavorite.setter.invoke(any()) } returns Unit
         coEvery { mockLocalDataSource.getCachedFavoriteMovies() } returns listMockedMovies
         coEvery { mockLocalDataSource.cacheFavoriteMovies(any()) } returns Unit
         // act
@@ -265,12 +267,13 @@ class MovieRepositoryImplTest {
 
         val tMockMovieToRemove = mockk<Movie>()
         every { tMockMovieToRemove.id } returns 1
+        every { tMockMovieToRemove::isFavorite.setter.invoke(any()) } returns Unit
 
         val listMockedMovies = mutableListOf(tMockMovie1, tMockMovie2)
         coEvery { mockLocalDataSource.getCachedFavoriteMovies() } returns listMockedMovies
         coEvery { mockLocalDataSource.cacheFavoriteMovies(any()) } returns Unit
         // act
-        async { movieRepository.favoriteOrDisfavorMovie(tMockMovieToRemove) }.await()
+        movieRepository.favoriteOrDisfavorMovie(tMockMovieToRemove)
         // assert
         coVerify(exactly = 1) {
             mockLocalDataSource.getCachedFavoriteMovies()

@@ -73,12 +73,12 @@ class MoviesViewModel: ViewModel() {
         }
     }
 
-    fun favoriteOrDisfavorMovie(movie: Movie) {
+    fun favoriteOrDisfavorMovie(movie: Movie, pos: Int) {
 
         favoriteOrDisfavorMovieResponse.postValue(Response.loading())
         CoroutineScope(Dispatchers.IO).launch {
             favoriteOrDisfavorMovieUseCase(movie)
-            favoriteOrDisfavorMovieResponse.postValue(Response.success(true))
+            favoriteOrDisfavorMovieResponse.postValue(Response.success(pos))
         }
     }
 

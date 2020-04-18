@@ -46,7 +46,7 @@ class MoviesActivity : AppCompatActivity() {
     private fun processOnFavorOrDisfavorMovieResponse(response: Response){
         if(response.status == Status.SUCCESS) {
             if(response.data != null) {
-                //TODO Ask to adapter redraw that item
+                movieAdapter.updateItem(response.data as Int)
             }
         }
     }
@@ -88,7 +88,7 @@ class MoviesActivity : AppCompatActivity() {
     }
 
     private fun onFavoriteClick(movie: Movie, pos: Int){
-        viewModel.favoriteOrDisfavorMovie(movie)
+        viewModel.favoriteOrDisfavorMovie(movie, pos)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

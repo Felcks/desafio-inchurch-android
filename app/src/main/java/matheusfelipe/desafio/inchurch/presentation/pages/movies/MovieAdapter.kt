@@ -34,6 +34,17 @@ class MovieAdapter(private val movieList: MutableList<Movie>,
         holder.itemView.iv_fav.setOnClickListener {
             onFavoriteClick(item, position)
         }
+
+        if(item.isFavorite) {
+            holder.itemView.iv_fav.setImageResource(R.drawable.ic_star_primary_24dp)
+        }
+        else{
+            holder.itemView.iv_fav.setImageResource(R.drawable.ic_star_border_primary_24dp)
+        }
+    }
+
+    fun updateItem(pos: Int){
+        notifyItemChanged(pos)
     }
 
     class MyViewHolder(view: View): RecyclerView.ViewHolder(view)
