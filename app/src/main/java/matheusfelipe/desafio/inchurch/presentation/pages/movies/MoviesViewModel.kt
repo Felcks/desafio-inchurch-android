@@ -1,8 +1,7 @@
 package matheusfelipe.desafio.inchurch.presentation.pages.movies
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -20,7 +19,7 @@ import matheusfelipe.desafio.inchurch.domain.repositories.MovieRepository
 import matheusfelipe.desafio.inchurch.domain.usecases.GetAllMovies
 import matheusfelipe.desafio.inchurch.domain.usecases.SelectDetailMovie
 
-class MoviesViewModel: ViewModel(){
+class MoviesViewModel: ViewModel() {
 
 
     private lateinit var selectDetailMovieUseCase: SelectDetailMovie
@@ -67,5 +66,11 @@ class MoviesViewModel: ViewModel(){
             Log.i("script2", "tudo certo no usecase")
             selectDetailMovieResponse.postValue(Response.success(true))
         }
+    }
+
+
+    override fun onCleared() {
+        super.onCleared()
+        selectDetailMovieResponse.postValue(Response.empty())
     }
 }

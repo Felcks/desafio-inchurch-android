@@ -27,6 +27,16 @@ class MoviesActivity : AppCompatActivity() {
 
         viewModel = ViewModelProviders.of(this)[MoviesViewModel::class.java]
         viewModel.movies().observe(this, Observer { response -> processResponse(response) })
+        viewModel.selectDetailMovieResponse().observe(this, Observer { response -> processOnSelectMovieResponse(response) })
+    }
+
+    private fun processOnSelectMovieResponse(response: Response){
+        if(response.status == Status.SUCCESS) {
+            if(response.data != null) {
+                val intent = Intent(this, MovieDetailActivity::class.java)
+                startActivity(intent)
+            }
+        }
     }
 
     private fun processResponse(response: Response){
@@ -62,15 +72,6 @@ class MoviesActivity : AppCompatActivity() {
     }
 
     private fun onItemClick(movie: Movie){
-
-        viewModel.selectDetailMovieResponse().observe(this, Observer { response ->
-            if(response.status == Status.SUCCESS) {
-                val intent = Intent(this, MovieDetailActivity::class.java)
-                startActivity(intent)
-            }
-         })
         viewModel.selectDetailMovie(movie)
-
-
     }
 }

@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_movie_detail.*
+import matheusfelipe.desafio.inchurch.BuildConfig
 import matheusfelipe.desafio.inchurch.R
 import matheusfelipe.desafio.inchurch.core.App
 import matheusfelipe.desafio.inchurch.core.utils.Response
@@ -72,7 +73,7 @@ class MovieDetailActivity : AppCompatActivity() {
 
     private fun fillScreen(genres: List<Genre>, movie: Movie) {
         Picasso.with(App.instance)
-            .load(movie.backdropPath).fit()
+            .load("${BuildConfig.IMAGE_URL}${movie.backdropPath}").fit()
             .into(iv_poster)
     }
 
