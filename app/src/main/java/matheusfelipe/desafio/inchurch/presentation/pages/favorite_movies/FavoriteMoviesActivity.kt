@@ -4,18 +4,22 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.View
+import android.widget.LinearLayout
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_favorite_movies.*
 import matheusfelipe.desafio.inchurch.R
 import matheusfelipe.desafio.inchurch.core.utils.Response
 import matheusfelipe.desafio.inchurch.core.utils.Status
+import matheusfelipe.desafio.inchurch.domain.entities.Movie
 
 class FavoriteMoviesActivity: AppCompatActivity() {
 
     private lateinit var viewModel: FavoriteMoviesViewModel
+    private lateinit var favoriteMoviesAdapter: FavoriteMoviesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,14 +53,11 @@ class FavoriteMoviesActivity: AppCompatActivity() {
                 return
             }
 
-            //Desenhar o adapter
-//            movieAdapter = MovieAdapter(data.filterIsInstance<Movie>().toMutableList(), ::onItemClick, ::onFavoriteClick)
-//
-//            val layoutManager = GridLayoutManager(this, 2)
-//            rv_movies.layoutManager = layoutManager
-//            rv_movies.adapter = movieAdapter
+            favoriteMoviesAdapter = FavoriteMoviesAdapter(data.filterIsInstance<Movie>().toMutableList(), ::onItemClick)
 
-            Log.i("script2", data.size.toString())
+            val layoutManager = LinearLayoutManager(this)
+            rv_movies.layoutManager = layoutManager
+            rv_movies.adapter = favoriteMoviesAdapter
         }
     }
 
@@ -64,6 +65,10 @@ class FavoriteMoviesActivity: AppCompatActivity() {
         pg_loading.visibility = View.GONE
         tv_error.text = throwable?.message
         tv_error.visibility = View.VISIBLE
+    }
+
+    private fun onItemClick(movie: Movie){
+        //viewModel.selectDetailMovie(movie)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
