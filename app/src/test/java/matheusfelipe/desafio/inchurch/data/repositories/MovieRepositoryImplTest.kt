@@ -7,6 +7,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import matheusfelipe.desafio.inchurch.core.exceptions.InvalidApiKeyThrowable
 import matheusfelipe.desafio.inchurch.core.exceptions.ResourceNotFoundThrowable
+import matheusfelipe.desafio.inchurch.data.data_sources.MovieLocalDataSource
 import matheusfelipe.desafio.inchurch.data.data_sources.MovieRemoteDataSource
 import matheusfelipe.desafio.inchurch.data.models.GenreModel
 import matheusfelipe.desafio.inchurch.data.models.GenreResultModel
@@ -27,6 +28,7 @@ class MovieRepositoryImplTest {
 
     private lateinit var movieRepository: MovieRepositoryImpl
     private lateinit var mockRemoteDataSource: MovieRemoteDataSource
+    private lateinit var mockLocalDataSource: MovieLocalDataSource
 
     private lateinit var tPageModel: PageModel<MovieModel>
     private lateinit var tMovieModel: MovieModel
@@ -43,7 +45,8 @@ class MovieRepositoryImplTest {
     @Before
     fun setup(){
         mockRemoteDataSource = mockk()
-        movieRepository = MovieRepositoryImpl(mockRemoteDataSource)
+        mockLocalDataSource = mockk()
+        movieRepository = MovieRepositoryImpl(mockRemoteDataSource, mockLocalDataSource)
 
         tMovieModel = MovieModel(
             id = 297761,
@@ -94,7 +97,7 @@ class MovieRepositoryImplTest {
     }
 
     @Test
-    fun `should return movie data when response is successfull`() = runBlocking{
+    fun `getAllMovies - should return movie data when response is successfull`() = runBlocking{
         // arrange
         coEvery { mockRemoteDataSource.getAllMovies() } returns tPageModel
         // act
@@ -105,7 +108,7 @@ class MovieRepositoryImplTest {
     }
 
     @Test
-    fun `should throw InvalidApiKeyException when error is 401 on getAllMovies`()  {
+    fun `getAllMovies - should throw InvalidApiKeyException when error is 401`()  {
         // arrange
         coEvery { mockRemoteDataSource.getAllMovies() } throws InvalidApiKeyThrowable()
         thrown.expect(InvalidApiKeyThrowable::class.java)
@@ -116,7 +119,7 @@ class MovieRepositoryImplTest {
     }
 
     @Test
-    fun `should throw ResourceNotFoundException when error is 404 on getAllMovies`()  {
+    fun `getAllMovies - should throw ResourceNotFoundException when error is 404`()  {
         // arrange
         coEvery { mockRemoteDataSource.getAllMovies() } throws ResourceNotFoundThrowable()
         // act
@@ -127,7 +130,7 @@ class MovieRepositoryImplTest {
     }
 
     @Test
-    fun `should return genre data when response is sucessfull on getAllMoviesGenres`() = runBlocking {
+    fun `getAllMoviesGenres - should return genre data when response is sucessfull`() = runBlocking {
         // arange
         coEvery { mockRemoteDataSource.getAllMoviesGenres() } returns tGenreResultModel
         // act
@@ -140,7 +143,7 @@ class MovieRepositoryImplTest {
     }
 
     @Test
-    fun `should throw InvalidApiKeyException when error is 401 on getAllMoviesGenres`()  {
+    fun `getAllMoviesGenres- should throw InvalidApiKeyException when error is 401`()  {
         // arrange
         coEvery { mockRemoteDataSource.getAllMoviesGenres() } throws InvalidApiKeyThrowable()
         thrown.expect(InvalidApiKeyThrowable::class.java)
@@ -151,13 +154,50 @@ class MovieRepositoryImplTest {
     }
 
     @Test
-    fun `should throw ResourceNotFoundException when error is 404 on getAllMoviesGenres`()  {
+    fun `getAllMoviesGenres - should throw ResourceNotFoundException when error is 404`()  {
         // arrange
         coEvery { mockRemoteDataSource.getAllMoviesGenres() } throws ResourceNotFoundThrowable()
         // act
         thrown.expect(ResourceNotFoundThrowable::class.java)
         runBlocking {
             movieRepository.getAllMoviesGenres()
+        }
+    }
+
+    @Test
+    fun `getCachedDetailMovie - should return cached detail movie when response is sucessfull`() = runBlocking {
+        // arange
+        coEvery { mockLocalDataSource.getCachedDetailMovie() } returns tMovieModel
+        // act
+        val result = async {movieRepository.getCachedDetailMovie()}.await()
+        // assert
+        assertEquals(tMovie, result)
+        coVerify(exactly = 1) {
+            mockLocalDataSource.getCachedDetailMovie()
+        }
+    }
+
+    @Test
+    fun `getCachedDetailMovie - should throw ResourceNotFoundException when error is 404`()  {
+        // arrange
+        coEvery { mockLocalDataSource.getCachedDetailMovie() }  throws ResourceNotFoundThrowable()
+        // act
+        thrown.expect(ResourceNotFoundThrowable::class.java)
+        runBlocking {
+            mockLocalDataSource.getCachedDetailMovie()
+        }
+    }
+
+
+    @Test
+    fun `cacheDetailMovie - should call localDataSource`() = runBlocking {
+        // arange
+        coEvery { mockLocalDataSource.cacheDetailMovie(any()) } returns Unit
+        // act
+        async {movieRepository.cacheDetailMovie(tMovie)}.await()
+        // assert
+        coVerify(exactly = 1) {
+            mockLocalDataSource.cacheDetailMovie(tMovieModel)
         }
     }
 

@@ -68,4 +68,13 @@ class MovieModelTest {
         // assert
         Assert.assertEquals(tMovieModel, result)
     }
+
+    @Test
+    fun `should return a valid model when entity fields are ok`(){
+        // arrange
+        // act
+        val result = MovieModel.fromEntity(tMovie)
+        // assert
+        Assert.assertEquals(tMovieModel, result)
+    }
 }

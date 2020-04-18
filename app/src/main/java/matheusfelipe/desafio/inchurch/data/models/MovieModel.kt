@@ -21,9 +21,9 @@ data class MovieModel(
     val vote_count: Int,
     val video: Boolean,
     val vote_average: Double
-){
+) {
 
-    fun toEntity(): Movie{
+    fun toEntity(): Movie {
         return Movie(
             posterPath = poster_path,
             isAdult = adult,
@@ -39,7 +39,29 @@ data class MovieModel(
             video = video,
             backdropPath = backdrop_path,
             voteAverage = vote_average
-
         )
+    }
+
+    companion object {
+        fun fromEntity(entity: Movie): MovieModel {
+            with(entity) {
+                return MovieModel(
+                    id = id,
+                    original_title = originalTitle,
+                    original_language = originalLanguage,
+                    title = title,
+                    poster_path = posterPath,
+                    adult = isAdult,
+                    overview = overview,
+                    release_date = SimpleDateFormat("yyyy-MM-dd").format(releaseDate),
+                    popularity = popularity,
+                    vote_count = voteCount,
+                    video = video,
+                    vote_average = voteAverage,
+                    genre_ids = genreIds,
+                    backdrop_path = backdropPath
+                )
+            }
+        }
     }
 }
