@@ -16,7 +16,7 @@ data class MovieModel(
     val original_title: String,
     val original_language: String,
     val title: String,
-    val backdrop_path: String,
+    val backdrop_path: String?,
     val popularity: Double,
     val vote_count: Int,
     val video: Boolean,
@@ -37,7 +37,7 @@ data class MovieModel(
             popularity = popularity,
             voteCount = vote_count,
             video = video,
-            backdropPath = backdrop_path,
+            backdropPath = backdrop_path ?: "",
             voteAverage = vote_average
         )
     }

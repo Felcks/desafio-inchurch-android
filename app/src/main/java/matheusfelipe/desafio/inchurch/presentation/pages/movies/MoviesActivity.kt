@@ -3,10 +3,12 @@ package matheusfelipe.desafio.inchurch.presentation.pages.movies
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_movies.*
 import matheusfelipe.desafio.inchurch.R
 import matheusfelipe.desafio.inchurch.core.utils.Response
@@ -55,7 +57,8 @@ class MoviesActivity : AppCompatActivity() {
 
     private fun showError(throwable: Throwable?){
         pg_loading.visibility = View.GONE
-        //tv_hello_world.text = throwable?.message ?: "Unexpected error"
+        Log.i("script2", throwable?.message)
+//        tv_hello_world.text = throwable?.message ?: "Unexpected error"
     }
 
     private fun onItemClick(movie: Movie){
