@@ -11,6 +11,5 @@ object InCacheDao {
 
     suspend fun cacheMovie(movie: MovieModel){
         this.movieDetail = movie
-        Log.i("script2", this.movieDetail.toString())
     }
 }

@@ -63,7 +63,6 @@ class MoviesViewModel: ViewModel() {
         selectDetailMovieResponse.postValue(Response.loading())
         CoroutineScope(Dispatchers.IO).launch {
             async { selectDetailMovieUseCase(movie) }.await()
-            Log.i("script2", "tudo certo no usecase")
             selectDetailMovieResponse.postValue(Response.success(true))
         }
     }

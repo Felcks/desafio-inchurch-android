@@ -17,6 +17,7 @@ import matheusfelipe.desafio.inchurch.core.utils.Response
 import matheusfelipe.desafio.inchurch.core.utils.Status
 import matheusfelipe.desafio.inchurch.domain.entities.Genre
 import matheusfelipe.desafio.inchurch.domain.entities.Movie
+import java.text.SimpleDateFormat
 
 class MovieDetailActivity : AppCompatActivity() {
 
@@ -31,9 +32,6 @@ class MovieDetailActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this)[MovieDetailViewModel::class.java]
         viewModel.detailMovie().observe(this, Observer { response -> processResponse(response) })
         viewModel.genres().observe(this, Observer { response -> processResponse(response) })
-
-
-        //tv_title.text = "Suicide Squad"
     }
 
     private fun processResponse(response: Response) {
@@ -72,9 +70,16 @@ class MovieDetailActivity : AppCompatActivity() {
     }
 
     private fun fillScreen(genres: List<Genre>, movie: Movie) {
+        toolbar.title = movie.title
+
         Picasso.with(App.instance)
             .load("${BuildConfig.IMAGE_URL}${movie.backdropPath}").fit()
             .into(iv_poster)
+
+        tv_title.text = movie.title
+        tv_release_date.text = SimpleDateFormat("dd/MM/yyyy").format(movie.releaseDate)
+        tv_genres.text = movie.getGenres(genres).joinToString { it.name }
+        tv_overview.text = movie.overview
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
