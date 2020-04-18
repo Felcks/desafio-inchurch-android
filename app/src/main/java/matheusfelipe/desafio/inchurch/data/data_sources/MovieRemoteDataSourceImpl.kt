@@ -1,5 +1,6 @@
 package matheusfelipe.desafio.inchurch.data.data_sources
 
+import android.util.Log
 import matheusfelipe.desafio.inchurch.BuildConfig
 import matheusfelipe.desafio.inchurch.core.api.MovieApi
 import matheusfelipe.desafio.inchurch.core.exceptions.InvalidApiKeyThrowable
@@ -22,7 +23,7 @@ class MovieRemoteDataSourceImpl(private val movieApi: MovieApi) : MovieRemoteDat
             else if(response.code() == 404)
                 throw ResourceNotFoundThrowable()
 
-            throw Exception()
+            throw Throwable()
         }
     }
 
@@ -37,7 +38,7 @@ class MovieRemoteDataSourceImpl(private val movieApi: MovieApi) : MovieRemoteDat
             else if(response.code() == 404)
                 throw ResourceNotFoundThrowable()
 
-            throw Exception()
+            throw Throwable()
         }
     }
 }

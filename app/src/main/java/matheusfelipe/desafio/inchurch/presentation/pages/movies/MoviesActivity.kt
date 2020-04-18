@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -35,6 +36,10 @@ class MoviesActivity : AppCompatActivity() {
             .observe(this, Observer { response -> processOnSelectMovieResponse(response) })
         viewModel.favoriteOrDisfavorMovieResponse()
             .observe(this, Observer { response -> processOnFavorOrDisfavorMovieResponse(response) })
+
+        ll_error.setOnClickListener {
+            viewModel.fetchAllMovies()
+        }
     }
 
     private fun processOnSelectMovieResponse(response: Response) {
@@ -68,6 +73,7 @@ class MoviesActivity : AppCompatActivity() {
         if(movieAdapter == null) {
             pg_loading.visibility = View.VISIBLE
             rv_movies.visibility = View.GONE
+            ll_error.visibility = View.GONE
         }
     }
 
@@ -96,8 +102,8 @@ class MoviesActivity : AppCompatActivity() {
 
     private fun showError(throwable: Throwable?) {
         pg_loading.visibility = View.GONE
-        tv_error.text = throwable?.message
-        tv_error.visibility = View.VISIBLE
+        ll_error.findViewById<TextView>(R.id.tv_error).text = throwable?.message
+        ll_error.visibility = View.VISIBLE
     }
 
     private fun onItemClick(movie: Movie) {
