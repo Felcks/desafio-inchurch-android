@@ -5,8 +5,8 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
-import matheusfelipe.desafio.inchurch.core.exceptions.InvalidApiKeyException
-import matheusfelipe.desafio.inchurch.core.exceptions.ResourceNotFoundException
+import matheusfelipe.desafio.inchurch.core.exceptions.InvalidApiKeyThrowable
+import matheusfelipe.desafio.inchurch.core.exceptions.ResourceNotFoundThrowable
 import matheusfelipe.desafio.inchurch.data.data_sources.MovieRemoteDataSource
 import matheusfelipe.desafio.inchurch.data.models.GenreModel
 import matheusfelipe.desafio.inchurch.data.models.GenreResultModel
@@ -106,8 +106,8 @@ class MovieRepositoryImplTest {
     @Test
     fun `should throw InvalidApiKeyException when error is 401 on getAllMovies`()  {
         // arrange
-        coEvery { mockRemoteDataSource.getAllMovies() } throws InvalidApiKeyException()
-        thrown.expect(InvalidApiKeyException::class.java)
+        coEvery { mockRemoteDataSource.getAllMovies() } throws InvalidApiKeyThrowable()
+        thrown.expect(InvalidApiKeyThrowable::class.java)
         // act
         runBlocking {
             movieRepository.getAllMovies()
@@ -117,9 +117,9 @@ class MovieRepositoryImplTest {
     @Test
     fun `should throw ResourceNotFoundException when error is 404 on getAllMovies`()  {
         // arrange
-        coEvery { mockRemoteDataSource.getAllMovies() } throws ResourceNotFoundException()
+        coEvery { mockRemoteDataSource.getAllMovies() } throws ResourceNotFoundThrowable()
         // act
-        thrown.expect(ResourceNotFoundException::class.java)
+        thrown.expect(ResourceNotFoundThrowable::class.java)
         runBlocking {
             movieRepository.getAllMovies()
         }
@@ -141,8 +141,8 @@ class MovieRepositoryImplTest {
     @Test
     fun `should throw InvalidApiKeyException when error is 401 on getAllMoviesGenres`()  {
         // arrange
-        coEvery { mockRemoteDataSource.getAllMoviesGenres() } throws InvalidApiKeyException()
-        thrown.expect(InvalidApiKeyException::class.java)
+        coEvery { mockRemoteDataSource.getAllMoviesGenres() } throws InvalidApiKeyThrowable()
+        thrown.expect(InvalidApiKeyThrowable::class.java)
         // act
         runBlocking {
             movieRepository.getAllMoviesGenres()
@@ -152,9 +152,9 @@ class MovieRepositoryImplTest {
     @Test
     fun `should throw ResourceNotFoundException when error is 404 on getAllMoviesGenres`()  {
         // arrange
-        coEvery { mockRemoteDataSource.getAllMoviesGenres() } throws ResourceNotFoundException()
+        coEvery { mockRemoteDataSource.getAllMoviesGenres() } throws ResourceNotFoundThrowable()
         // act
-        thrown.expect(ResourceNotFoundException::class.java)
+        thrown.expect(ResourceNotFoundThrowable::class.java)
         runBlocking {
             movieRepository.getAllMoviesGenres()
         }

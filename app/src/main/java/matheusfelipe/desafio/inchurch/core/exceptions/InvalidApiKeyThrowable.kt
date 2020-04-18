@@ -2,4 +2,4 @@ package matheusfelipe.desafio.inchurch.core.exceptions
 
 import java.lang.Exception
 
-class ResourceNotFoundException: Exception()
+class InvalidApiKeyThrowable: Throwable("Chave de API inválida")

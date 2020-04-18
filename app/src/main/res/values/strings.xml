@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Desafio Inchurch Android</string>
+    <string name="movie_list_title">Filmes</string>
 </resources>

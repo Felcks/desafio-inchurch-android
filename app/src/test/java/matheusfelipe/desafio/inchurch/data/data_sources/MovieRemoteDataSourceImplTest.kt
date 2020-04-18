@@ -5,8 +5,8 @@ import io.mockk.mockk
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.runBlocking
 import matheusfelipe.desafio.inchurch.core.api.MovieApi
-import matheusfelipe.desafio.inchurch.core.exceptions.InvalidApiKeyException
-import matheusfelipe.desafio.inchurch.core.exceptions.ResourceNotFoundException
+import matheusfelipe.desafio.inchurch.core.exceptions.InvalidApiKeyThrowable
+import matheusfelipe.desafio.inchurch.core.exceptions.ResourceNotFoundThrowable
 import matheusfelipe.desafio.inchurch.data.models.GenreResultModel
 import matheusfelipe.desafio.inchurch.data.models.MovieModel
 import matheusfelipe.desafio.inchurch.data.models.PageModel
@@ -46,7 +46,7 @@ class MovieRemoteDataSourceImplTest {
     fun `getAllMovies - should throw invalidApiKeyException when api returns 401`() {
         // arrange
         coEvery { mockMovieApi.getAllMovies() } returns Response.error(401, mockk<ResponseBody>())
-        thrown.expect(InvalidApiKeyException::class.java)
+        thrown.expect(InvalidApiKeyThrowable::class.java)
         // act
         runBlocking {
             movieRemoteDataSourceImpl.getAllMovies()
@@ -58,7 +58,7 @@ class MovieRemoteDataSourceImplTest {
     fun `getAllMovies - should throw ResourceNotFoundException when api returns 404`() {
         // arrange
         coEvery { mockMovieApi.getAllMovies() } returns Response.error(404, mockk<ResponseBody>())
-        thrown.expect(ResourceNotFoundException::class.java)
+        thrown.expect(ResourceNotFoundThrowable::class.java)
         // act
         runBlocking {
             movieRemoteDataSourceImpl.getAllMovies()
@@ -81,7 +81,7 @@ class MovieRemoteDataSourceImplTest {
     fun `getAllMoviesGenres - should throw invalidApiKeyException when api returns 401`() {
         // arrange
         coEvery { mockMovieApi.getAllMoviesGenres() } returns Response.error(401, mockk<ResponseBody>())
-        thrown.expect(InvalidApiKeyException::class.java)
+        thrown.expect(InvalidApiKeyThrowable::class.java)
         // act
         runBlocking {
             movieRemoteDataSourceImpl.getAllMoviesGenres()
@@ -93,7 +93,7 @@ class MovieRemoteDataSourceImplTest {
     fun `getAllMoviesGenres - should throw ResourceNotFoundException when api returns 404`() {
         // arrange
         coEvery { mockMovieApi.getAllMoviesGenres() } returns Response.error(404, mockk<ResponseBody>())
-        thrown.expect(ResourceNotFoundException::class.java)
+        thrown.expect(ResourceNotFoundThrowable::class.java)
         // act
         runBlocking {
             movieRemoteDataSourceImpl.getAllMoviesGenres()

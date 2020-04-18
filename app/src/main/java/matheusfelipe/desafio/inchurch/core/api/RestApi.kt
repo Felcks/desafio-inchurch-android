@@ -18,7 +18,7 @@ object RestApi {
 
         val client = clientBuilder.build()
         retrofit = Retrofit.Builder()
-            .baseUrl("https://api.themoviedb.org/3/movie/")
+            .baseUrl("https://api.themoviedb.org/3/")
             .addConverterFactory(MoshiConverterFactory.create().asLenient())
             .client(client)
             .build()
