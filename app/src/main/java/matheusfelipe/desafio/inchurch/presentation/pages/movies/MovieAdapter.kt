@@ -1,24 +1,30 @@
 package matheusfelipe.desafio.inchurch.presentation.pages.movies
 
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.item_movie_simple.view.*
+import matheusfelipe.desafio.inchurch.R
+import matheusfelipe.desafio.inchurch.domain.entities.Movie
 
-class MovieAdapter(): RecyclerView.Adapter<MovieAdapter.MyViewHolder>() {
-
-    class MyViewHolder(view: View): RecyclerView.ViewHolder(view){
-        
-    }
+class MovieAdapter(private val movieList: MutableList<Movie>): RecyclerView.Adapter<MovieAdapter.MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_movie_simple, parent, false)
+        return MyViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun getItemCount(): Int = movieList.size
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+        val item = movieList[position]
+
+        holder.itemView.tv_title.text = item.title
+        //holder.itemView.tv
     }
+
+    class MyViewHolder(view: View): RecyclerView.ViewHolder(view)
 }
