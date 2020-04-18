@@ -1,5 +1,6 @@
 package matheusfelipe.desafio.inchurch.presentation.pages.movies
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -11,6 +12,7 @@ import matheusfelipe.desafio.inchurch.R
 import matheusfelipe.desafio.inchurch.core.utils.Response
 import matheusfelipe.desafio.inchurch.core.utils.Status
 import matheusfelipe.desafio.inchurch.domain.entities.Movie
+import matheusfelipe.desafio.inchurch.presentation.pages.movie_detail.MovieDetailActivity
 
 class MoviesActivity : AppCompatActivity() {
 
@@ -43,13 +45,12 @@ class MoviesActivity : AppCompatActivity() {
 
         if(data is List<*>) {
 
-            movieAdapter = MovieAdapter(data.filterIsInstance<Movie>().toMutableList())
+            movieAdapter = MovieAdapter(data.filterIsInstance<Movie>().toMutableList(), ::onItemClick)
 
             val layoutManager = GridLayoutManager(this, 2)
             rv_movies.layoutManager = layoutManager
             rv_movies.adapter = movieAdapter
         }
-
     }
 
     private fun showError(throwable: Throwable?){
@@ -57,4 +58,8 @@ class MoviesActivity : AppCompatActivity() {
         //tv_hello_world.text = throwable?.message ?: "Unexpected error"
     }
 
+    private fun onItemClick(movie: Movie){
+        val intent = Intent(this, MovieDetailActivity::class.java)
+        startActivity(intent)
+    }
 }

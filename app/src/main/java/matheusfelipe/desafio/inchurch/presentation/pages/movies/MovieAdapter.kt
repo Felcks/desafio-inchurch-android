@@ -11,7 +11,8 @@ import matheusfelipe.desafio.inchurch.R
 import matheusfelipe.desafio.inchurch.core.App
 import matheusfelipe.desafio.inchurch.domain.entities.Movie
 
-class MovieAdapter(private val movieList: MutableList<Movie>): RecyclerView.Adapter<MovieAdapter.MyViewHolder>() {
+class MovieAdapter(private val movieList: MutableList<Movie>,
+                   private val onClick: (movie: Movie) -> Unit): RecyclerView.Adapter<MovieAdapter.MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_movie_simple, parent, false)
@@ -26,7 +27,9 @@ class MovieAdapter(private val movieList: MutableList<Movie>): RecyclerView.Adap
 
         holder.itemView.tv_title.text = item.title
         Picasso.with(App.instance).load("${BuildConfig.IMAGE_URL}${item.posterPath}").into(holder.itemView.iv_poster)
-        //holder.itemView.tv
+        holder.itemView.setOnClickListener {
+            onClick(item)
+        }
     }
 
     class MyViewHolder(view: View): RecyclerView.ViewHolder(view)

@@ -35,7 +35,7 @@ class MovieRemoteDataSourceImplTest {
     fun `getAllMovies - should return success when api returns success`() = runBlocking {
         // arrange
         val expect = mockk<PageModel<MovieModel>>()
-        coEvery { mockMovieApi.getAllMovies() } returns Response.success(expect)
+        coEvery { mockMovieApi.getAllMovies(any()) } returns Response.success(expect)
         // act
         val result = movieRemoteDataSourceImpl.getAllMovies()
         //assert
@@ -45,7 +45,7 @@ class MovieRemoteDataSourceImplTest {
     @Test
     fun `getAllMovies - should throw invalidApiKeyException when api returns 401`() {
         // arrange
-        coEvery { mockMovieApi.getAllMovies() } returns Response.error(401, mockk<ResponseBody>())
+        coEvery { mockMovieApi.getAllMovies(any()) } returns Response.error(401, mockk<ResponseBody>())
         thrown.expect(InvalidApiKeyThrowable::class.java)
         // act
         runBlocking {
@@ -57,7 +57,7 @@ class MovieRemoteDataSourceImplTest {
     @Test
     fun `getAllMovies - should throw ResourceNotFoundException when api returns 404`() {
         // arrange
-        coEvery { mockMovieApi.getAllMovies() } returns Response.error(404, mockk<ResponseBody>())
+        coEvery { mockMovieApi.getAllMovies(any()) } returns Response.error(404, mockk<ResponseBody>())
         thrown.expect(ResourceNotFoundThrowable::class.java)
         // act
         runBlocking {
@@ -70,7 +70,7 @@ class MovieRemoteDataSourceImplTest {
     fun `getAllMoviesGenres - should return success when api returns success`() = runBlocking {
         // arrange
         val expect = mockk<GenreResultModel>()
-        coEvery { mockMovieApi.getAllMoviesGenres() } returns Response.success(expect)
+        coEvery { mockMovieApi.getAllMoviesGenres(any()) } returns Response.success(expect)
         // act
         val result = movieRemoteDataSourceImpl.getAllMoviesGenres()
         //assert
@@ -80,7 +80,7 @@ class MovieRemoteDataSourceImplTest {
     @Test
     fun `getAllMoviesGenres - should throw invalidApiKeyException when api returns 401`() {
         // arrange
-        coEvery { mockMovieApi.getAllMoviesGenres() } returns Response.error(401, mockk<ResponseBody>())
+        coEvery { mockMovieApi.getAllMoviesGenres(any()) } returns Response.error(401, mockk<ResponseBody>())
         thrown.expect(InvalidApiKeyThrowable::class.java)
         // act
         runBlocking {
@@ -92,7 +92,7 @@ class MovieRemoteDataSourceImplTest {
     @Test
     fun `getAllMoviesGenres - should throw ResourceNotFoundException when api returns 404`() {
         // arrange
-        coEvery { mockMovieApi.getAllMoviesGenres() } returns Response.error(404, mockk<ResponseBody>())
+        coEvery { mockMovieApi.getAllMoviesGenres(any()) } returns Response.error(404, mockk<ResponseBody>())
         thrown.expect(ResourceNotFoundThrowable::class.java)
         // act
         runBlocking {
