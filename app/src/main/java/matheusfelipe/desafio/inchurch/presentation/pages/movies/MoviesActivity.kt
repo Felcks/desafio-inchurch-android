@@ -4,7 +4,10 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.ActionBar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
@@ -14,6 +17,7 @@ import matheusfelipe.desafio.inchurch.R
 import matheusfelipe.desafio.inchurch.core.utils.Response
 import matheusfelipe.desafio.inchurch.core.utils.Status
 import matheusfelipe.desafio.inchurch.domain.entities.Movie
+import matheusfelipe.desafio.inchurch.presentation.pages.favorite_movies.FavoriteMoviesActivity
 import matheusfelipe.desafio.inchurch.presentation.pages.movie_detail.MovieDetailActivity
 
 class MoviesActivity : AppCompatActivity() {
@@ -85,5 +89,23 @@ class MoviesActivity : AppCompatActivity() {
 
     private fun onFavoriteClick(movie: Movie, pos: Int){
         viewModel.favoriteOrDisfavorMovie(movie)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_all_movies, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+
+        when (item?.itemId) {
+            R.id.ic_bookmark -> {
+                val intent = Intent(this, FavoriteMoviesActivity::class.java)
+                startActivity(intent)
+                return true
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 }

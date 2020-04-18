@@ -27,6 +27,11 @@
             android:name=".presentation.pages.movie_detail.MovieDetailActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+
+        <activity
+            android:name=".presentation.pages.favorite_movies.FavoriteMoviesActivity"
+            android:label="Filmes - Favoritos">
+        </activity>
     </application>
 
 </manifest>
