@@ -5,7 +5,7 @@ import matheusfelipe.desafio.inchurch.domain.entities.Genre
 import matheusfelipe.desafio.inchurch.domain.entities.Movie
 import matheusfelipe.desafio.inchurch.domain.repositories.MovieRepository
 
-class MovieRepositoryImpl(val remoteDataSource: MovieRemoteDataSource): MovieRepository {
+class MovieRepositoryImpl(private val remoteDataSource: MovieRemoteDataSource): MovieRepository {
 
     override suspend fun getAllMovies(): List<Movie> {
         return remoteDataSource.getAllMovies().results.map {
@@ -14,6 +14,8 @@ class MovieRepositoryImpl(val remoteDataSource: MovieRemoteDataSource): MovieRep
     }
 
     override suspend fun getAllMoviesGenres(): List<Genre> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return remoteDataSource.getAllMoviesGenres().genres.map {
+            it.toEntity()
+        }
     }
 }
