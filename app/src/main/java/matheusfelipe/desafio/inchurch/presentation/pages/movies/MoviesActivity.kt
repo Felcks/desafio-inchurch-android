@@ -28,6 +28,7 @@ class MoviesActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this)[MoviesViewModel::class.java]
         viewModel.movies().observe(this, Observer { response -> processResponse(response) })
         viewModel.selectDetailMovieResponse().observe(this, Observer { response -> processOnSelectMovieResponse(response) })
+        viewModel.favoriteOrDisfavorMovieResponse().observe(this, Observer { response -> processOnFavorOrDisfavorMovieResponse(response) })
     }
 
     private fun processOnSelectMovieResponse(response: Response){
@@ -35,6 +36,13 @@ class MoviesActivity : AppCompatActivity() {
             if(response.data != null) {
                 val intent = Intent(this, MovieDetailActivity::class.java)
                 startActivity(intent)
+            }
+        }
+    }
+    private fun processOnFavorOrDisfavorMovieResponse(response: Response){
+        if(response.status == Status.SUCCESS) {
+            if(response.data != null) {
+                //TODO Ask to adapter redraw that item
             }
         }
     }
@@ -57,7 +65,7 @@ class MoviesActivity : AppCompatActivity() {
 
         if(data is List<*>) {
 
-            movieAdapter = MovieAdapter(data.filterIsInstance<Movie>().toMutableList(), ::onItemClick)
+            movieAdapter = MovieAdapter(data.filterIsInstance<Movie>().toMutableList(), ::onItemClick, ::onFavoriteClick)
 
             val layoutManager = GridLayoutManager(this, 2)
             rv_movies.layoutManager = layoutManager
@@ -73,5 +81,9 @@ class MoviesActivity : AppCompatActivity() {
 
     private fun onItemClick(movie: Movie){
         viewModel.selectDetailMovie(movie)
+    }
+
+    private fun onFavoriteClick(movie: Movie, pos: Int){
+        viewModel.favoriteOrDisfavorMovie(movie)
     }
 }

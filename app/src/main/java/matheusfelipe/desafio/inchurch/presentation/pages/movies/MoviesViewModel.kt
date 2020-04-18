@@ -16,12 +16,14 @@ import matheusfelipe.desafio.inchurch.data.data_sources.MovieRemoteDataSourceImp
 import matheusfelipe.desafio.inchurch.data.repositories.MovieRepositoryImpl
 import matheusfelipe.desafio.inchurch.domain.entities.Movie
 import matheusfelipe.desafio.inchurch.domain.repositories.MovieRepository
+import matheusfelipe.desafio.inchurch.domain.usecases.FavoriteOrDisfavorMovie
 import matheusfelipe.desafio.inchurch.domain.usecases.GetAllMovies
 import matheusfelipe.desafio.inchurch.domain.usecases.SelectDetailMovie
 
 class MoviesViewModel: ViewModel() {
 
 
+    private lateinit var favoriteOrDisfavorMovieUseCase: FavoriteOrDisfavorMovie
     private lateinit var selectDetailMovieUseCase: SelectDetailMovie
     private lateinit var getAllMovies: GetAllMovies
     private lateinit var movieRepository: MovieRepository
@@ -34,6 +36,9 @@ class MoviesViewModel: ViewModel() {
     private var selectDetailMovieResponse: MutableLiveData<Response> = MutableLiveData()
     fun selectDetailMovieResponse() = selectDetailMovieResponse
 
+    private var favoriteOrDisfavorMovieResponse: MutableLiveData<Response> = MutableLiveData()
+    fun favoriteOrDisfavorMovieResponse() = favoriteOrDisfavorMovieResponse
+
     init {
         val api = RestApi.getRetrofit().create(MovieApi::class.java)
         movieRemoteDataSource = MovieRemoteDataSourceImpl(api)
@@ -41,6 +46,7 @@ class MoviesViewModel: ViewModel() {
         movieRepository = MovieRepositoryImpl(movieRemoteDataSource, movieLocalDataSource)
         getAllMovies = GetAllMovies(movieRepository)
         selectDetailMovieUseCase = SelectDetailMovie(movieRepository)
+        favoriteOrDisfavorMovieUseCase = FavoriteOrDisfavorMovie(movieRepository)
 
         fetchAllMovies()
     }
@@ -62,8 +68,17 @@ class MoviesViewModel: ViewModel() {
 
         selectDetailMovieResponse.postValue(Response.loading())
         CoroutineScope(Dispatchers.IO).launch {
-            async { selectDetailMovieUseCase(movie) }.await()
+            selectDetailMovieUseCase(movie)
             selectDetailMovieResponse.postValue(Response.success(true))
+        }
+    }
+
+    fun favoriteOrDisfavorMovie(movie: Movie) {
+
+        favoriteOrDisfavorMovieResponse.postValue(Response.loading())
+        CoroutineScope(Dispatchers.IO).launch {
+            favoriteOrDisfavorMovieUseCase(movie)
+            favoriteOrDisfavorMovieResponse.postValue(Response.success(true))
         }
     }
 
