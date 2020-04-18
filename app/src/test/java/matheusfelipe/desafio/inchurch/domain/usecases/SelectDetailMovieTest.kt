@@ -25,7 +25,7 @@ class SelectDetailMovieTest {
     }
 
     @Test
-    fun `should return all movies from the repository`() = runBlocking {
+    fun `should return call cacheDetailMovie from the repository`() = runBlocking {
         // arrange
         coEvery { mockMovieRepository.cacheDetailMovie(any()) } returns Unit
         // act

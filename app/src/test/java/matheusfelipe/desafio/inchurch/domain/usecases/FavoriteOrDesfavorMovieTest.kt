@@ -7,33 +7,31 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import matheusfelipe.desafio.inchurch.domain.entities.Movie
 import matheusfelipe.desafio.inchurch.domain.repositories.MovieRepository
-import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
-class ViewDetailMovieTest {
+class FavoriteOrDesfavorMovieTest {
 
     private lateinit var mockMovieRepository: MovieRepository
-    private lateinit var usecase: ViewDetailMovie
+    private lateinit var usecase: FavoriteOrDisfavorMovie
     private lateinit var tMockMovie: Movie
 
     @Before
     fun setup() {
         mockMovieRepository = mockk()
-        usecase = ViewDetailMovie(mockMovieRepository)
+        usecase = FavoriteOrDisfavorMovie(mockMovieRepository)
         tMockMovie = mockk()
     }
 
     @Test
-    fun `should return all movie from the repository`() = runBlocking {
+    fun `should return call favorite movie from the repository`() = runBlocking {
         // arrange
-        coEvery { mockMovieRepository.getCachedDetailMovie() } returns tMockMovie
+        coEvery { mockMovieRepository.favoriteOrDisfavorMovie(any()) } returns Unit
         // act
-        val result = async { usecase() }.await()
+        val result = async { usecase(tMockMovie) }.await()
         // assert
-        Assert.assertEquals(tMockMovie, result)
         coVerify(exactly = 1) {
-            mockMovieRepository.getCachedDetailMovie()
+            mockMovieRepository.favoriteOrDisfavorMovie(tMockMovie)
         }
     }
 }

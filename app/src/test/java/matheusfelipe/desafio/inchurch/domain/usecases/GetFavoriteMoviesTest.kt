@@ -11,29 +11,29 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
-class ViewDetailMovieTest {
+class GetFavoriteMoviesTest {
 
     private lateinit var mockMovieRepository: MovieRepository
-    private lateinit var usecase: ViewDetailMovie
-    private lateinit var tMockMovie: Movie
+    private lateinit var usecase: GetFavoriteMovies
+    private lateinit var tMockMovieList: List<Movie>
 
     @Before
     fun setup() {
         mockMovieRepository = mockk()
-        usecase = ViewDetailMovie(mockMovieRepository)
-        tMockMovie = mockk()
+        usecase = GetFavoriteMovies(mockMovieRepository)
+        tMockMovieList = listOf(mockk<Movie>(), mockk<Movie>())
     }
 
     @Test
-    fun `should return all movie from the repository`() = runBlocking {
+    fun `should return get favorite movies from the repository`() = runBlocking {
         // arrange
-        coEvery { mockMovieRepository.getCachedDetailMovie() } returns tMockMovie
+        coEvery { mockMovieRepository.getFavoriteMovies() } returns tMockMovieList
         // act
         val result = async { usecase() }.await()
         // assert
-        Assert.assertEquals(tMockMovie, result)
+        Assert.assertEquals(tMockMovieList, result)
         coVerify(exactly = 1) {
-            mockMovieRepository.getCachedDetailMovie()
+            mockMovieRepository.getFavoriteMovies()
         }
     }
 }
