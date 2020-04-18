@@ -23,7 +23,7 @@ import matheusfelipe.desafio.inchurch.presentation.pages.movie_detail.MovieDetai
 class MoviesActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MoviesViewModel
-    private lateinit var movieAdapter: MovieAdapter
+    private var movieAdapter: MovieAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,63 +31,80 @@ class MoviesActivity : AppCompatActivity() {
 
         viewModel = ViewModelProviders.of(this)[MoviesViewModel::class.java]
         viewModel.movies().observe(this, Observer { response -> processResponse(response) })
-        viewModel.selectDetailMovieResponse().observe(this, Observer { response -> processOnSelectMovieResponse(response) })
-        viewModel.favoriteOrDisfavorMovieResponse().observe(this, Observer { response -> processOnFavorOrDisfavorMovieResponse(response) })
+        viewModel.selectDetailMovieResponse()
+            .observe(this, Observer { response -> processOnSelectMovieResponse(response) })
+        viewModel.favoriteOrDisfavorMovieResponse()
+            .observe(this, Observer { response -> processOnFavorOrDisfavorMovieResponse(response) })
     }
 
-    private fun processOnSelectMovieResponse(response: Response){
-        if(response.status == Status.SUCCESS) {
-            if(response.data != null) {
+    private fun processOnSelectMovieResponse(response: Response) {
+        if (response.status == Status.SUCCESS) {
+            if (response.data != null) {
                 val intent = Intent(this, MovieDetailActivity::class.java)
                 startActivity(intent)
             }
         }
     }
-    private fun processOnFavorOrDisfavorMovieResponse(response: Response){
-        if(response.status == Status.SUCCESS) {
-            if(response.data != null) {
-                movieAdapter.updateItem(response.data as Int)
+
+    private fun processOnFavorOrDisfavorMovieResponse(response: Response) {
+        if (response.status == Status.SUCCESS) {
+            if (response.data != null) {
+                movieAdapter?.updateItem(response.data as Int)
             }
         }
     }
 
-    private fun processResponse(response: Response){
-        when(response.status){
+    private fun processResponse(response: Response) {
+        when (response.status) {
             Status.LOADING -> showLoading()
             Status.SUCCESS -> showMovies(response.data)
-            Status.EMPTY_RESPONSE -> {}
+            Status.EMPTY_RESPONSE -> {
+            }
             Status.ERROR -> showError(response.error)
         }
     }
 
-    private fun showLoading(){
-        pg_loading.visibility = View.VISIBLE
-    }
-
-    private fun showMovies(data: Any?){
-        pg_loading.visibility = View.GONE
-
-        if(data is List<*>) {
-
-            movieAdapter = MovieAdapter(data.filterIsInstance<Movie>().toMutableList(), ::onItemClick, ::onFavoriteClick)
-
-            val layoutManager = GridLayoutManager(this, 2)
-            rv_movies.layoutManager = layoutManager
-            rv_movies.adapter = movieAdapter
+    private fun showLoading() {
+        if(movieAdapter == null) {
+            pg_loading.visibility = View.VISIBLE
+            rv_movies.visibility = View.GONE
         }
     }
 
-    private fun showError(throwable: Throwable?){
+    private fun showMovies(data: Any?) {
+        pg_loading.visibility = View.GONE
+        rv_movies.visibility = View.VISIBLE
+
+        if (data is List<*>) {
+
+            if (movieAdapter == null) {
+                movieAdapter = MovieAdapter(
+                    data.filterIsInstance<Movie>().toMutableList(),
+                    ::onItemClick,
+                    ::onFavoriteClick
+                )
+
+                val layoutManager = GridLayoutManager(this, 2)
+                rv_movies.layoutManager = layoutManager
+                rv_movies.adapter = movieAdapter
+            } else {
+                movieAdapter?.updateAllItems(data.filterIsInstance<Movie>().toMutableList())
+            }
+        }
+    }
+
+
+    private fun showError(throwable: Throwable?) {
         pg_loading.visibility = View.GONE
         tv_error.text = throwable?.message
         tv_error.visibility = View.VISIBLE
     }
 
-    private fun onItemClick(movie: Movie){
+    private fun onItemClick(movie: Movie) {
         viewModel.selectDetailMovie(movie)
     }
 
-    private fun onFavoriteClick(movie: Movie, pos: Int){
+    private fun onFavoriteClick(movie: Movie, pos: Int) {
         viewModel.favoriteOrDisfavorMovie(movie, pos)
     }
 
@@ -107,5 +124,10 @@ class MoviesActivity : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.fetchAllMovies()
     }
 }

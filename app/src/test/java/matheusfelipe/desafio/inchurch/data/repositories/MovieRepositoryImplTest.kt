@@ -167,6 +167,7 @@ class MovieRepositoryImplTest {
     fun `getCachedDetailMovie - should return cached detail movie when response is sucessfull`() = runBlocking {
         // arange
         coEvery { mockLocalDataSource.getCachedDetailMovie() } returns tMovieModel
+        coEvery { mockLocalDataSource.getCachedFavoriteMovies() } returns mutableListOf()
         // act
         val result = async {movieRepository.getCachedDetailMovie()}.await()
         // assert

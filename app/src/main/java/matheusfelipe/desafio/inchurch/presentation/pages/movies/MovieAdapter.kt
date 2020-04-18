@@ -11,12 +11,15 @@ import matheusfelipe.desafio.inchurch.R
 import matheusfelipe.desafio.inchurch.core.App
 import matheusfelipe.desafio.inchurch.domain.entities.Movie
 
-class MovieAdapter(private val movieList: MutableList<Movie>,
-                   private val onClick: (movie: Movie) -> Unit,
-                   private val onFavoriteClick: (movie: Movie, pos: Int) -> Unit): RecyclerView.Adapter<MovieAdapter.MyViewHolder>() {
+class MovieAdapter(
+    private var movieList: MutableList<Movie>,
+    private val onClick: (movie: Movie) -> Unit,
+    private val onFavoriteClick: (movie: Movie, pos: Int) -> Unit
+) : RecyclerView.Adapter<MovieAdapter.MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_movie_simple, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_movie_simple, parent, false)
         return MyViewHolder(view)
     }
 
@@ -35,17 +38,23 @@ class MovieAdapter(private val movieList: MutableList<Movie>,
             onFavoriteClick(item, position)
         }
 
-        if(item.isFavorite) {
-            holder.itemView.iv_fav.setImageResource(R.drawable.ic_star_primary_24dp)
-        }
-        else{
-            holder.itemView.iv_fav.setImageResource(R.drawable.ic_star_border_primary_24dp)
-        }
+        holder.itemView.iv_fav.setImageResource(
+            if (item.isFavorite)
+                R.drawable.ic_star_primary_24dp
+            else
+                R.drawable.ic_star_border_primary_24dp
+        )
+
     }
 
-    fun updateItem(pos: Int){
+    fun updateItem(pos: Int) {
         notifyItemChanged(pos)
     }
 
-    class MyViewHolder(view: View): RecyclerView.ViewHolder(view)
+    fun updateAllItems(list: MutableList<Movie>) {
+        this.movieList = list
+        notifyDataSetChanged()
+    }
+
+    class MyViewHolder(view: View) : RecyclerView.ViewHolder(view)
 }

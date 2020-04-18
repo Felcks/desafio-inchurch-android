@@ -7,5 +7,4 @@
         android:icon="@drawable/ic_bookmark_white_24dp"
         android:title="Favoritos"
         app:showAsAction="always"/>
-
 </menu>

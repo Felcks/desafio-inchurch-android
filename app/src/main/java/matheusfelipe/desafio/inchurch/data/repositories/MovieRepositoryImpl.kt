@@ -7,8 +7,10 @@ import matheusfelipe.desafio.inchurch.domain.entities.Genre
 import matheusfelipe.desafio.inchurch.domain.entities.Movie
 import matheusfelipe.desafio.inchurch.domain.repositories.MovieRepository
 
-class MovieRepositoryImpl(private val remoteDataSource: MovieRemoteDataSource,
-                          private val localDataSource: MovieLocalDataSource): MovieRepository {
+class MovieRepositoryImpl(
+    private val remoteDataSource: MovieRemoteDataSource,
+    private val localDataSource: MovieLocalDataSource
+) : MovieRepository {
 
     override suspend fun getAllMovies(): List<Movie> {
         val movieList = remoteDataSource.getAllMovies().results.map {
@@ -16,8 +18,8 @@ class MovieRepositoryImpl(private val remoteDataSource: MovieRemoteDataSource,
         }
 
         val favoriteList = localDataSource.getCachedFavoriteMovies()
-        for(movie in movieList){
-            if(favoriteList.firstOrNull { it.id == movie.id } != null)
+        for (movie in movieList) {
+            if (favoriteList.firstOrNull { it.id == movie.id } != null)
                 movie.isFavorite = true
         }
 
@@ -35,17 +37,22 @@ class MovieRepositoryImpl(private val remoteDataSource: MovieRemoteDataSource,
     }
 
     override suspend fun getCachedDetailMovie(): Movie {
-        return localDataSource.getCachedDetailMovie().toEntity()
+        val movie = localDataSource.getCachedDetailMovie().toEntity()
+
+        val favoriteList = localDataSource.getCachedFavoriteMovies()
+        if (favoriteList.firstOrNull { it.id == movie.id } != null)
+            movie.isFavorite = true
+
+        return movie
     }
 
     override suspend fun favoriteOrDisfavorMovie(movie: Movie): Movie {
         var favoriteMovies = localDataSource.getCachedFavoriteMovies()
-        if(favoriteMovies.firstOrNull { it.id == movie.id } == null){
+        if (favoriteMovies.firstOrNull { it.id == movie.id } == null) {
             favoriteMovies = favoriteMovies.apply { this.add(MovieModel.fromEntity(movie)) }
             localDataSource.cacheFavoriteMovies(favoriteMovies)
             return movie.apply { this.isFavorite = true }
-        }
-        else{
+        } else {
             favoriteMovies = favoriteMovies.apply { this.removeAll { it.id == movie.id } }
             localDataSource.cacheFavoriteMovies(favoriteMovies)
             return movie.apply { this.isFavorite = false }

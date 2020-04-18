@@ -20,7 +20,7 @@ import matheusfelipe.desafio.inchurch.domain.usecases.FavoriteOrDisfavorMovie
 import matheusfelipe.desafio.inchurch.domain.usecases.GetAllMovies
 import matheusfelipe.desafio.inchurch.domain.usecases.SelectDetailMovie
 
-class MoviesViewModel: ViewModel() {
+class MoviesViewModel : ViewModel() {
 
 
     private lateinit var favoriteOrDisfavorMovieUseCase: FavoriteOrDisfavorMovie
@@ -51,11 +51,11 @@ class MoviesViewModel: ViewModel() {
         fetchAllMovies()
     }
 
-    private fun fetchAllMovies() {
+    fun fetchAllMovies() {
 
         movies.postValue(Response.loading())
         CoroutineScope(Dispatchers.IO).launch {
-            try{
+            try {
                 val result = getAllMovies()
                 movies.postValue(Response.success(result))
             } catch (t: Throwable) {
@@ -64,7 +64,7 @@ class MoviesViewModel: ViewModel() {
         }
     }
 
-    fun selectDetailMovie(movie: Movie){
+    fun selectDetailMovie(movie: Movie) {
 
         selectDetailMovieResponse.postValue(Response.loading())
         CoroutineScope(Dispatchers.IO).launch {

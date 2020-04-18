@@ -1,7 +1,9 @@
 package matheusfelipe.desafio.inchurch.presentation.pages.movie_detail
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
@@ -32,6 +34,7 @@ class MovieDetailActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this)[MovieDetailViewModel::class.java]
         viewModel.detailMovie().observe(this, Observer { response -> processResponse(response) })
         viewModel.genres().observe(this, Observer { response -> processResponse(response) })
+        viewModel.favoriteOrDisfavorMovieResponse().observe(this, Observer { response -> processResponse(response) })
     }
 
     private fun processResponse(response: Response) {
@@ -80,14 +83,33 @@ class MovieDetailActivity : AppCompatActivity() {
         tv_release_date.text = SimpleDateFormat("dd/MM/yyyy").format(movie.releaseDate)
         tv_genres.text = movie.getGenres(genres).joinToString { it.name }
         tv_overview.text = movie.overview
+
+        toolbar.menu.findItem(R.id.ic_favor_disfavor).setIcon(
+            if(movie.isFavorite)
+                R.drawable.ic_star_white_24dp
+            else
+                R.drawable.ic_star_border_white_24dp
+        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val actionBar: ActionBar? = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
-        //menuInflater.inflate(R.menu.menu_pedido_visualizacao, menu)
+        menuInflater.inflate(R.menu.menu_detail_movie, menu)
 
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+
+        when (item?.itemId) {
+            R.id.ic_favor_disfavor -> {
+                viewModel.favoriteOrDisfavorMovie()
+                return true
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onSupportNavigateUp(): Boolean {
