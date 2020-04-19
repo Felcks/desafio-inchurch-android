@@ -32,6 +32,8 @@ class FavoriteMoviesViewModel : ViewModel() {
     private var selectDetailMovieResponse: MutableLiveData<Response> = MutableLiveData()
     fun selectDetailMovieResponse() = selectDetailMovieResponse
 
+    private var filter = ""
+
     init {
         val api = RestApi.getRetrofit().create(MovieApi::class.java)
         movieRemoteDataSource = MovieRemoteDataSourceImpl(api)
@@ -39,8 +41,6 @@ class FavoriteMoviesViewModel : ViewModel() {
         movieRepository = MovieRepositoryImpl(movieRemoteDataSource, movieLocalDataSource)
         getFavoriteMoviesUseCase = GetFavoriteMovies(movieRepository)
         selectDetailMovieUseCase = SelectDetailMovie(movieRepository)
-
-        fetchFavoriteMovies()
     }
 
     fun fetchFavoriteMovies() {
@@ -48,12 +48,17 @@ class FavoriteMoviesViewModel : ViewModel() {
         movies.postValue(Response.loading())
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val result = getFavoriteMoviesUseCase()
+                val result = getFavoriteMoviesUseCase(filter)
                 movies.postValue(Response.success(result))
             } catch (t: Throwable) {
                 movies.postValue(Response.error(t))
             }
         }
+    }
+
+    fun searchMovies(filter: String){
+        this.filter = filter
+        fetchFavoriteMovies()
     }
 
     fun selectDetailMovie(movie: Movie) {
