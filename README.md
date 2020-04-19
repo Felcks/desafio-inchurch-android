@@ -51,8 +51,8 @@ Nessa parte do processo de recrutamento você desenvolverá uma aplicação Android.
 * ## Observações
 * Há duas implementações para o MovieLocalDataSource. Isso porque uma implementação salva os favoritos na memória da aplicação, então ao fechar o aplicativo os favoritos são perdidos. Enquanto a outra implementação salva os favoritos no sharedPreferences. A implementação default é a com sharedPreferences. Porém, descomentando a primeira e comentando a segunda linha, o aplicativo passa a usar a implementação que salva na memória da aplicação.
 ```
-Linha 27 and 28 de DependencyModules 
-single<MovieLocalDataSource> { MovieLocalDataSourceImpl() }
+// Linha 27 and 28 de DependencyModules 
+// single<MovieLocalDataSource> { MovieLocalDataSourceImpl() }
 single<MovieLocalDataSource> { MovieLocalDataSourceSharedPrefsImpl(get(), get()) }
 ```
 #
