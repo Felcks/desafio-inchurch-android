@@ -21,17 +21,17 @@ import matheusfelipe.desafio.inchurch.domain.entities.Movie
 import matheusfelipe.desafio.inchurch.presentation.pages.favorite_movies.FavoriteMoviesActivity
 import matheusfelipe.desafio.inchurch.presentation.pages.movie_detail.MovieDetailActivity
 import matheusfelipe.desafio.inchurch.presentation.widgets.InfiniteScrollListener
+import org.koin.android.ext.android.inject
 
 class MoviesActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: MoviesViewModel
+    private val viewModel: MoviesViewModel by inject()
     private var movieAdapter: MovieAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movies)
 
-        viewModel = ViewModelProviders.of(this)[MoviesViewModel::class.java]
         viewModel.movies().observe(this, Observer { response -> processResponse(response) })
         viewModel.moviesForUpdate()
             .observe(this, Observer { response -> processMoviesForUpdateResponse(response) })
