@@ -17,14 +17,12 @@ import matheusfelipe.desafio.inchurch.domain.entities.Movie
 import matheusfelipe.desafio.inchurch.domain.repositories.MovieRepository
 import matheusfelipe.desafio.inchurch.domain.usecases.*
 
-class MovieDetailViewModel: ViewModel() {
+class MovieDetailViewModel(
+    val favoriteOrDisfavorMovieUseCase: FavoriteOrDisfavorMovie,
+    val viewDetailMovie: ViewDetailMovie,
+    val getAllMoviesGenres: GetAllMoviesGenres
+): ViewModel() {
 
-    private lateinit var favoriteOrDisfavorMovieUseCase: FavoriteOrDisfavorMovie
-    private lateinit var viewDetailMovie: ViewDetailMovie
-    private lateinit var getAllMoviesGenres: GetAllMoviesGenres
-    private lateinit var movieRepository: MovieRepository
-    private lateinit var movieRemoteDataSource: MovieRemoteDataSource
-    private lateinit var movieLocalDataSource: MovieLocalDataSource
 
     private var genres: MutableLiveData<Response> = MutableLiveData()
     fun genres() = genres
@@ -36,14 +34,6 @@ class MovieDetailViewModel: ViewModel() {
     fun favoriteOrDisfavorMovieResponse() = favoriteOrDisfavorMovieResponse
 
     init {
-        val api = RestApi.getRetrofit().create(MovieApi::class.java)
-        movieRemoteDataSource = MovieRemoteDataSourceImpl(api)
-        movieLocalDataSource = MovieLocalDataSourceImpl()
-        movieRepository = MovieRepositoryImpl(movieRemoteDataSource, movieLocalDataSource)
-        getAllMoviesGenres = GetAllMoviesGenres(movieRepository)
-        viewDetailMovie = ViewDetailMovie(movieRepository)
-        favoriteOrDisfavorMovieUseCase = FavoriteOrDisfavorMovie(movieRepository)
-
         fetchDetailMovie()
         fetchAllGenres()
     }

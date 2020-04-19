@@ -20,10 +20,11 @@ import matheusfelipe.desafio.inchurch.core.utils.Response
 import matheusfelipe.desafio.inchurch.core.utils.Status
 import matheusfelipe.desafio.inchurch.domain.entities.Movie
 import matheusfelipe.desafio.inchurch.presentation.pages.movie_detail.MovieDetailActivity
+import org.koin.android.ext.android.inject
 
 class FavoriteMoviesActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: FavoriteMoviesViewModel
+    private val viewModel: FavoriteMoviesViewModel by inject()
     private var favoriteMoviesAdapter: FavoriteMoviesAdapter? = null
     private var searchView: SearchView? = null
 
@@ -31,7 +32,6 @@ class FavoriteMoviesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_favorite_movies)
 
-        viewModel = ViewModelProviders.of(this)[FavoriteMoviesViewModel::class.java]
         viewModel.movies().observe(this, Observer { response -> processResponse(response) })
         viewModel.selectDetailMovieResponse()
             .observe(this, Observer { response -> processOnSelectMovieResponse(response) })

@@ -19,19 +19,18 @@ import matheusfelipe.desafio.inchurch.core.utils.Response
 import matheusfelipe.desafio.inchurch.core.utils.Status
 import matheusfelipe.desafio.inchurch.domain.entities.Genre
 import matheusfelipe.desafio.inchurch.domain.entities.Movie
+import org.koin.android.ext.android.inject
 import java.text.SimpleDateFormat
 
 class MovieDetailActivity : AppCompatActivity() {
 
-
-    private lateinit var viewModel: MovieDetailViewModel
+    private val viewModel: MovieDetailViewModel by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_detail)
         setSupportActionBar(toolbar)
-
-        viewModel = ViewModelProviders.of(this)[MovieDetailViewModel::class.java]
+        
         viewModel.detailMovie().observe(this, Observer { response -> processResponse(response) })
         viewModel.genres().observe(this, Observer { response -> processResponse(response) })
         viewModel.favoriteOrDisfavorMovieResponse().observe(this, Observer { response -> processResponse(response) })

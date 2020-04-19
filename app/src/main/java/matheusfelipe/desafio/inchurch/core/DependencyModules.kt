@@ -10,6 +10,7 @@ import matheusfelipe.desafio.inchurch.data.repositories.MovieRepositoryImpl
 import matheusfelipe.desafio.inchurch.domain.repositories.MovieRepository
 import matheusfelipe.desafio.inchurch.domain.usecases.*
 import matheusfelipe.desafio.inchurch.presentation.pages.favorite_movies.FavoriteMoviesViewModel
+import matheusfelipe.desafio.inchurch.presentation.pages.movie_detail.MovieDetailViewModel
 import matheusfelipe.desafio.inchurch.presentation.pages.movies.MoviesViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -31,8 +32,8 @@ object DependencyModules {
         factory<SelectDetailMovie> { SelectDetailMovie(get())}
         factory<ViewDetailMovie> { ViewDetailMovie(get())}
 
-
         viewModel<MoviesViewModel> { MoviesViewModel(get(), get(), get(), get()) }
-
+        viewModel<MovieDetailViewModel> { MovieDetailViewModel(get(), get(), get()) }
+        viewModel<FavoriteMoviesViewModel> { FavoriteMoviesViewModel(get(), get()) }
     }
 }
