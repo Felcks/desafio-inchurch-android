@@ -5,7 +5,7 @@ import matheusfelipe.desafio.inchurch.domain.repositories.MovieRepository
 
 class GetFavoriteMovies(private val repository: MovieRepository) {
 
-    suspend operator fun invoke(): List<Movie> {
-        return repository.getFavoriteMovies()
+    suspend operator fun invoke(filter: String = ""): List<Movie> {
+        return repository.getFavoriteMovies(filter)
     }
 }

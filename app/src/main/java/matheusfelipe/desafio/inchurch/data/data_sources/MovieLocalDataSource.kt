@@ -9,5 +9,5 @@ interface MovieLocalDataSource {
     suspend fun getCachedDetailMovie(): MovieModel
 
     suspend fun cacheFavoriteMovies(movies: MutableList<MovieModel>)
-    suspend fun getCachedFavoriteMovies(): MutableList<MovieModel>
+    suspend fun getCachedFavoriteMovies(filter: String = ""): MutableList<MovieModel>
 }

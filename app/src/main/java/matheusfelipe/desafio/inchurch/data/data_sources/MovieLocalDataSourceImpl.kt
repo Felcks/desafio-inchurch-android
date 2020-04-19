@@ -17,7 +17,9 @@ class MovieLocalDataSourceImpl: MovieLocalDataSource {
         InCacheDao.setCachedFavoriteMovies(movies.toMutableList())
     }
 
-    override suspend fun getCachedFavoriteMovies(): MutableList<MovieModel> {
-        return InCacheDao.getCachedFavoriteMovies()
+    override suspend fun getCachedFavoriteMovies(filter: String): MutableList<MovieModel> {
+        return InCacheDao.getCachedFavoriteMovies().filter {
+            it.title.contains(filter)
+        }.toMutableList()
     }
 }

@@ -59,8 +59,8 @@ class MovieRepositoryImpl(
         }
     }
 
-    override suspend fun getFavoriteMovies(): List<Movie> {
-        return localDataSource.getCachedFavoriteMovies().map {
+    override suspend fun getFavoriteMovies(filter: String): List<Movie> {
+        return localDataSource.getCachedFavoriteMovies(filter).map {
             it.toEntity()
         }
     }

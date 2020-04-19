@@ -36,4 +36,18 @@ class GetFavoriteMoviesTest {
             mockMovieRepository.getFavoriteMovies()
         }
     }
+
+    @Test
+    fun `should return get favorite movies from the repository and call with correct params`() = runBlocking {
+        // arrange
+        val tFilter = "filter"
+        coEvery { mockMovieRepository.getFavoriteMovies(any()) } returns tMockMovieList
+        // act
+        val result = async { usecase(tFilter) }.await()
+        // assert
+        Assert.assertEquals(tMockMovieList, result)
+        coVerify(exactly = 1) {
+            mockMovieRepository.getFavoriteMovies(tFilter)
+        }
+    }
 }

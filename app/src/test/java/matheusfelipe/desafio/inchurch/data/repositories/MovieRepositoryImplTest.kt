@@ -36,6 +36,12 @@ class MovieRepositoryImplTest {
     private lateinit var tGenreModel: GenreModel
     private lateinit var tGenre: Genre
 
+    private lateinit var tMockMovie1: Movie
+    private lateinit var tMockMovie2: Movie
+
+    private lateinit var tMockMovieModel1: MovieModel
+    private lateinit var tMockMovieModel2: MovieModel
+
     @get:Rule
     var thrown = ExpectedException.none()
 
@@ -92,6 +98,12 @@ class MovieRepositoryImplTest {
         tGenre = Genre(28, "Action")
         tGenreModel = GenreModel(28, "Action")
         tGenreResultModel = GenreResultModel(listOf(GenreModel(28, "Action")))
+
+        tMockMovie1 = mockk()
+        tMockMovie2 = mockk()
+
+        tMockMovieModel1 = mockk()
+        tMockMovieModel2 = mockk()
     }
 
     @Test
@@ -217,14 +229,10 @@ class MovieRepositoryImplTest {
     @Test
     fun `getFavoriteMovies - should return cachedListMovie when there is favorite movies`() = runBlocking {
         // arrange
-        val tMockMovie1 = mockk<Movie>()
-        val tMockMovie2 = mockk<Movie>()
         every { tMockMovie1.id } returns 1
         every { tMockMovie2.id } returns 2
         val listMockedMovies = mutableListOf<Movie>(tMockMovie1, tMockMovie2)
 
-        val tMockMovieModel1 = mockk<MovieModel>()
-        val tMockMovieModel2 = mockk<MovieModel>()
         every { tMockMovieModel1.id } returns 1
         every { tMockMovieModel1.toEntity() } returns tMockMovie1
         every { tMockMovieModel2.id } returns 2
@@ -238,6 +246,31 @@ class MovieRepositoryImplTest {
         assertEquals(listMockedMovies, result)
         coVerify(exactly = 1) {
             mockLocalDataSource.getCachedFavoriteMovies()
+        }
+    }
+
+    @Test
+    fun `getFavoriteMovies - should return filtered cachedListMovie when there is favorite movies`() = runBlocking {
+        // arrange
+        val tFilter = "filter"
+
+        every { tMockMovie1.id } returns 1
+        every { tMockMovie2.id } returns 2
+        val listMockedMovies = mutableListOf<Movie>(tMockMovie1, tMockMovie2)
+
+        every { tMockMovieModel1.id } returns 1
+        every { tMockMovieModel1.toEntity() } returns tMockMovie1
+        every { tMockMovieModel2.id } returns 2
+        every { tMockMovieModel2.toEntity() } returns tMockMovie2
+        val listMockedMoviesModel = mutableListOf<MovieModel>(tMockMovieModel1, tMockMovieModel2)
+
+        coEvery { mockLocalDataSource.getCachedFavoriteMovies(any()) } returns listMockedMoviesModel
+        // act
+        val result = movieRepository.getFavoriteMovies(tFilter)
+        // assert
+        assertEquals(listMockedMovies, result)
+        coVerify(exactly = 1) {
+            mockLocalDataSource.getCachedFavoriteMovies(tFilter)
         }
     }
 

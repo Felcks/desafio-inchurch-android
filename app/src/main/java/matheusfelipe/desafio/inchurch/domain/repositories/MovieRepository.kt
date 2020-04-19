@@ -11,5 +11,5 @@ interface MovieRepository {
    suspend fun getCachedDetailMovie(): Movie
 
    suspend fun favoriteOrDisfavorMovie(movie: Movie): Movie
-   suspend fun getFavoriteMovies(): List<Movie>
+   suspend fun getFavoriteMovies(filter: String = ""): List<Movie>
 }
