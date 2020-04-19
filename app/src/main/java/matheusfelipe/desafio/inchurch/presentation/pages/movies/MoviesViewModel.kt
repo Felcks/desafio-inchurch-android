@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import matheusfelipe.desafio.inchurch.core.api.MovieApi
 import matheusfelipe.desafio.inchurch.core.api.RestApi
@@ -39,6 +38,8 @@ class MoviesViewModel : ViewModel() {
     private var favoriteOrDisfavorMovieResponse: MutableLiveData<Response> = MutableLiveData()
     fun favoriteOrDisfavorMovieResponse() = favoriteOrDisfavorMovieResponse
 
+    private var currentPage = 1
+
     init {
         val api = RestApi.getRetrofit().create(MovieApi::class.java)
         movieRemoteDataSource = MovieRemoteDataSourceImpl(api)
@@ -56,12 +57,18 @@ class MoviesViewModel : ViewModel() {
         movies.postValue(Response.loading())
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val result = getAllMovies()
+                Log.i("script2", currentPage.toString())
+                val result = getAllMovies(currentPage)
                 movies.postValue(Response.success(result))
             } catch (t: Throwable) {
                 movies.postValue(Response.error(t))
             }
         }
+    }
+
+    fun loadMoreMovies() {
+        currentPage += 1
+        fetchAllMovies()
     }
 
     fun selectDetailMovie(movie: Movie) {

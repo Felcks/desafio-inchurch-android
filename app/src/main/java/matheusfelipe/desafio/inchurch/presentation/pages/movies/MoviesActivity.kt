@@ -20,6 +20,7 @@ import matheusfelipe.desafio.inchurch.core.utils.Status
 import matheusfelipe.desafio.inchurch.domain.entities.Movie
 import matheusfelipe.desafio.inchurch.presentation.pages.favorite_movies.FavoriteMoviesActivity
 import matheusfelipe.desafio.inchurch.presentation.pages.movie_detail.MovieDetailActivity
+import matheusfelipe.desafio.inchurch.presentation.widgets.InfiniteScrollListener
 
 class MoviesActivity : AppCompatActivity() {
 
@@ -70,7 +71,7 @@ class MoviesActivity : AppCompatActivity() {
     }
 
     private fun showLoading() {
-        if(movieAdapter == null) {
+        if (movieAdapter == null) {
             pg_loading.visibility = View.VISIBLE
             rv_movies.visibility = View.GONE
             ll_error.visibility = View.GONE
@@ -92,9 +93,15 @@ class MoviesActivity : AppCompatActivity() {
 
                 val layoutManager = GridLayoutManager(this, 2)
                 rv_movies.layoutManager = layoutManager
+                rv_movies.addOnScrollListener(
+                    InfiniteScrollListener({
+                        viewModel.loadMoreMovies()
+                    }, layoutManager)
+                )
                 rv_movies.adapter = movieAdapter
             } else {
-                movieAdapter?.updateAllItems(data.filterIsInstance<Movie>().toMutableList())
+                movieAdapter?.addItems(data.filterIsInstance<Movie>().toMutableList())
+                //movieAdapter?.updateAllItems(data.filterIsInstance<Movie>().toMutableList())
             }
         }
     }
@@ -134,6 +141,6 @@ class MoviesActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.fetchAllMovies()
+        //viewModel.fetchAllMovies()
     }
 }

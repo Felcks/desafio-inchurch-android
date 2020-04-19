@@ -2,7 +2,6 @@ package matheusfelipe.desafio.inchurch.data.data_sources
 
 import matheusfelipe.desafio.inchurch.core.exceptions.ResourceNotFoundThrowable
 import matheusfelipe.desafio.inchurch.data.models.MovieModel
-import matheusfelipe.desafio.inchurch.domain.entities.Movie
 
 class MovieLocalDataSourceImpl: MovieLocalDataSource {
 

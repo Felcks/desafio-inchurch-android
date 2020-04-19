@@ -56,5 +56,10 @@ class MovieAdapter(
         notifyDataSetChanged()
     }
 
+    fun addItems(list: MutableList<Movie>) {
+        this.movieList.addAll(list)
+        notifyDataSetChanged()
+    }
+
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view)
 }
