@@ -17,6 +17,7 @@ import matheusfelipe.desafio.inchurch.domain.entities.Movie
 import matheusfelipe.desafio.inchurch.domain.repositories.MovieRepository
 import matheusfelipe.desafio.inchurch.domain.usecases.FavoriteOrDisfavorMovie
 import matheusfelipe.desafio.inchurch.domain.usecases.GetAllMovies
+import matheusfelipe.desafio.inchurch.domain.usecases.GetFavoriteMovies
 import matheusfelipe.desafio.inchurch.domain.usecases.SelectDetailMovie
 
 class MoviesViewModel : ViewModel() {
@@ -25,12 +26,16 @@ class MoviesViewModel : ViewModel() {
     private lateinit var favoriteOrDisfavorMovieUseCase: FavoriteOrDisfavorMovie
     private lateinit var selectDetailMovieUseCase: SelectDetailMovie
     private lateinit var getAllMovies: GetAllMovies
+    private lateinit var getFavoriteMoviesUseCase: GetFavoriteMovies
     private lateinit var movieRepository: MovieRepository
     private lateinit var movieRemoteDataSource: MovieRemoteDataSource
     private lateinit var movieLocalDataSource: MovieLocalDataSource
 
     private var movies: MutableLiveData<Response> = MutableLiveData()
     fun movies() = movies
+
+    private var moviesForUpdate: MutableLiveData<Response> = MutableLiveData()
+    fun moviesForUpdate() = moviesForUpdate
 
     private var selectDetailMovieResponse: MutableLiveData<Response> = MutableLiveData()
     fun selectDetailMovieResponse() = selectDetailMovieResponse
@@ -48,6 +53,7 @@ class MoviesViewModel : ViewModel() {
         getAllMovies = GetAllMovies(movieRepository)
         selectDetailMovieUseCase = SelectDetailMovie(movieRepository)
         favoriteOrDisfavorMovieUseCase = FavoriteOrDisfavorMovie(movieRepository)
+        getFavoriteMoviesUseCase = GetFavoriteMovies(movieRepository)
 
         fetchAllMovies()
     }
@@ -57,7 +63,6 @@ class MoviesViewModel : ViewModel() {
         movies.postValue(Response.loading())
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                Log.i("script2", currentPage.toString())
                 val result = getAllMovies(currentPage)
                 movies.postValue(Response.success(result))
             } catch (t: Throwable) {
@@ -69,6 +74,23 @@ class MoviesViewModel : ViewModel() {
     fun loadMoreMovies() {
         currentPage += 1
         fetchAllMovies()
+    }
+
+    fun updateMovies(movies: MutableList<Movie>){
+
+        moviesForUpdate.postValue(Response.loading())
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val favoriteMovies = getFavoriteMoviesUseCase()
+                val favoriteMoviesIDs = favoriteMovies.map { it.id }
+                movies.forEach {
+                    it.isFavorite = favoriteMoviesIDs.contains(it.id)
+                }
+                moviesForUpdate.postValue(Response.success(movies))
+            } catch (t: Throwable) {
+                moviesForUpdate.postValue(Response.error(t))
+            }
+        }
     }
 
     fun selectDetailMovie(movie: Movie) {
@@ -88,7 +110,6 @@ class MoviesViewModel : ViewModel() {
             favoriteOrDisfavorMovieResponse.postValue(Response.success(pos))
         }
     }
-
 
     override fun onCleared() {
         super.onCleared()

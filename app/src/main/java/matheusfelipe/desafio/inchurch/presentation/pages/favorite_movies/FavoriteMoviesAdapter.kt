@@ -40,7 +40,6 @@ class FavoriteMoviesAdapter (private var movieList: MutableList<Movie>,
 
     fun updateAllItems(list: MutableList<Movie>) {
         this.movieList = list
-        Log.i("script2", list.size.toString())
         notifyDataSetChanged()
     }
 

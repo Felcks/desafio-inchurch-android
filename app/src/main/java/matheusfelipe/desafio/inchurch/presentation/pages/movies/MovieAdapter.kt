@@ -17,6 +17,8 @@ class MovieAdapter(
     private val onFavoriteClick: (movie: Movie, pos: Int) -> Unit
 ) : RecyclerView.Adapter<MovieAdapter.MyViewHolder>() {
 
+    fun movieList() = movieList
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.item_movie_simple, parent, false)
@@ -44,7 +46,6 @@ class MovieAdapter(
             else
                 R.drawable.ic_star_border_primary_24dp
         )
-
     }
 
     fun updateItem(pos: Int) {

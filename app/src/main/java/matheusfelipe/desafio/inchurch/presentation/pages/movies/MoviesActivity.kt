@@ -33,6 +33,8 @@ class MoviesActivity : AppCompatActivity() {
 
         viewModel = ViewModelProviders.of(this)[MoviesViewModel::class.java]
         viewModel.movies().observe(this, Observer { response -> processResponse(response) })
+        viewModel.moviesForUpdate()
+            .observe(this, Observer { response -> processMoviesForUpdateResponse(response) })
         viewModel.selectDetailMovieResponse()
             .observe(this, Observer { response -> processOnSelectMovieResponse(response) })
         viewModel.favoriteOrDisfavorMovieResponse()
@@ -56,6 +58,14 @@ class MoviesActivity : AppCompatActivity() {
         if (response.status == Status.SUCCESS) {
             if (response.data != null) {
                 movieAdapter?.updateItem(response.data as Int)
+            }
+        }
+    }
+
+    private fun processMoviesForUpdateResponse(response: Response) {
+        when (response.status) {
+            Status.SUCCESS -> showUpdateMovies(response.data)
+            else -> {
             }
         }
     }
@@ -101,16 +111,20 @@ class MoviesActivity : AppCompatActivity() {
                 rv_movies.adapter = movieAdapter
             } else {
                 movieAdapter?.addItems(data.filterIsInstance<Movie>().toMutableList())
-                //movieAdapter?.updateAllItems(data.filterIsInstance<Movie>().toMutableList())
             }
         }
     }
-
 
     private fun showError(throwable: Throwable?) {
         pg_loading.visibility = View.GONE
         ll_error.findViewById<TextView>(R.id.tv_error).text = throwable?.message
         ll_error.visibility = View.VISIBLE
+    }
+
+    private fun showUpdateMovies(data: Any?) {
+        if (data is List<*>) {
+            movieAdapter?.updateAllItems(data.filterIsInstance<Movie>().toMutableList())
+        }
     }
 
     private fun onItemClick(movie: Movie) {
@@ -141,6 +155,7 @@ class MoviesActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        //viewModel.fetchAllMovies()
+        if (this.movieAdapter != null)
+            viewModel.updateMovies(this.movieAdapter?.movieList() ?: mutableListOf())
     }
 }
