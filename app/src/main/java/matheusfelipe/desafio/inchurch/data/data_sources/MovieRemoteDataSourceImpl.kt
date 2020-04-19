@@ -12,7 +12,7 @@ import java.lang.Exception
 
 class MovieRemoteDataSourceImpl(private val movieApi: MovieApi) : MovieRemoteDataSource {
 
-    override suspend fun getAllMovies(): PageModel<MovieModel> {
+    override suspend fun getAllMovies(page: Int): PageModel<MovieModel> {
         val response = movieApi.getAllMovies(BuildConfig.API_KEY)
         if (response.isSuccessful) {
             return response.body()!!

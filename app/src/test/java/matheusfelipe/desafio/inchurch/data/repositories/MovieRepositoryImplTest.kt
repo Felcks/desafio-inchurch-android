@@ -107,6 +107,19 @@ class MovieRepositoryImplTest {
     }
 
     @Test
+    fun `getAllMovies - should return movie data and call dataSource with correct param`() = runBlocking{
+        // arrange
+        val tPage = 2
+        coEvery { mockRemoteDataSource.getAllMovies(any()) } returns tPageModel
+        coEvery { mockLocalDataSource.getCachedFavoriteMovies() } returns mutableListOf()
+        // act
+        val result = async {movieRepository.getAllMovies(tPage)}.await()
+        // assert
+        assertEquals(listOf(tMovie), result)
+        coVerify(exactly = 1) { mockRemoteDataSource.getAllMovies(tPage) }
+    }
+
+    @Test
     fun `getAllMovies - should throw InvalidApiKeyException when error is 401`()  {
         // arrange
         coEvery { mockRemoteDataSource.getAllMovies() } throws InvalidApiKeyThrowable()

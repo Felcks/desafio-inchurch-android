@@ -6,6 +6,6 @@ import matheusfelipe.desafio.inchurch.data.models.PageModel
 
 interface MovieRemoteDataSource {
 
-    suspend fun getAllMovies(): PageModel<MovieModel>
+    suspend fun getAllMovies(page: Int = 1): PageModel<MovieModel>
     suspend fun getAllMoviesGenres(): GenreResultModel
 }
