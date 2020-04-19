@@ -1,6 +1,7 @@
 package matheusfelipe.desafio.inchurch.data.data_sources
 
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.runBlocking
@@ -40,6 +41,21 @@ class MovieRemoteDataSourceImplTest {
         val result = movieRemoteDataSourceImpl.getAllMovies()
         //assert
         assertEquals(expect, result)
+    }
+
+    @Test
+    fun `getAllMovies - should call api with correct params and returns success`() = runBlocking {
+        // arrange
+        val tPage = 2
+        val expect = mockk<PageModel<MovieModel>>()
+        coEvery { mockMovieApi.getAllMovies(any(), any()) } returns Response.success(expect)
+        // act
+        val result = movieRemoteDataSourceImpl.getAllMovies(tPage)
+        //assert
+        assertEquals(expect, result)
+        coVerify(exactly = 1) {
+            mockMovieApi.getAllMovies(any(), tPage)
+        }
     }
 
     @Test
