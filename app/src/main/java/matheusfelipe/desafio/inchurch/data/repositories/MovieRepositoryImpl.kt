@@ -12,7 +12,7 @@ class MovieRepositoryImpl(
     private val localDataSource: MovieLocalDataSource
 ) : MovieRepository {
 
-    override suspend fun getAllMovies(): List<Movie> {
+    override suspend fun getAllMovies(page: Int): List<Movie> {
         val movieList = remoteDataSource.getAllMovies().results.map {
             it.toEntity()
         }

@@ -5,7 +5,7 @@ import matheusfelipe.desafio.inchurch.domain.repositories.MovieRepository
 
 class GetAllMovies(private val movieRepository: MovieRepository) {
 
-    suspend operator fun invoke(): List<Movie> {
-        return movieRepository.getAllMovies()
+    suspend operator fun invoke(page: Int = 1): List<Movie> {
+        return movieRepository.getAllMovies(page)
     }
 }

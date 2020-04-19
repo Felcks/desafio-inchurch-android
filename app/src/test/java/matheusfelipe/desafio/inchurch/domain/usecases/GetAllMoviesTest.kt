@@ -36,4 +36,18 @@ class GetAllMoviesTest {
             mockMovieRepository.getAllMovies()
         }
     }
+
+    @Test
+    fun `should return call repository with correct page param`() = runBlocking {
+        // arrange
+        val tPage = 2
+        coEvery { mockMovieRepository.getAllMovies(any()) } returns tMockMovieList
+        // act
+        val result = async { usecase(tPage) }.await()
+        // assert
+        assertEquals(tMockMovieList, result)
+        coVerify(exactly = 1) {
+            mockMovieRepository.getAllMovies(tPage)
+        }
+    }
 }
