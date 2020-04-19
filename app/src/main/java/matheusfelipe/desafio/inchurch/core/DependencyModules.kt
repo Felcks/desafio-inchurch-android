@@ -1,11 +1,12 @@
 package matheusfelipe.desafio.inchurch.core
 
+import android.content.Context
+import android.content.SharedPreferences
+import com.google.gson.Gson
 import matheusfelipe.desafio.inchurch.core.api.MovieApi
 import matheusfelipe.desafio.inchurch.core.api.RestApi
-import matheusfelipe.desafio.inchurch.data.data_sources.MovieLocalDataSource
-import matheusfelipe.desafio.inchurch.data.data_sources.MovieLocalDataSourceImpl
-import matheusfelipe.desafio.inchurch.data.data_sources.MovieRemoteDataSource
-import matheusfelipe.desafio.inchurch.data.data_sources.MovieRemoteDataSourceImpl
+import matheusfelipe.desafio.inchurch.data.data_sources.*
+import matheusfelipe.desafio.inchurch.data.data_sources.MovieLocalDataSourceSharedPrefsImpl.Companion.SHARED_PREFERENCES_KEY
 import matheusfelipe.desafio.inchurch.data.repositories.MovieRepositoryImpl
 import matheusfelipe.desafio.inchurch.domain.repositories.MovieRepository
 import matheusfelipe.desafio.inchurch.domain.usecases.*
@@ -20,7 +21,11 @@ object DependencyModules {
     val appModule = module{
 
         single<MovieApi> {  RestApi.getRetrofit().create(MovieApi::class.java) }
-        single<MovieLocalDataSource> { MovieLocalDataSourceImpl() }
+        single<SharedPreferences> { App.instance.getSharedPreferences(SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE) }
+        single<Gson> { Gson() }
+
+//        single<MovieLocalDataSource> { MovieLocalDataSourceImpl() }
+        single<MovieLocalDataSource> { MovieLocalDataSourceSharedPrefsImpl(get(), get()) }
         single<MovieRemoteDataSource> { MovieRemoteDataSourceImpl(get<MovieApi>()) }
 
         single<MovieRepository> { MovieRepositoryImpl(get(), get())}

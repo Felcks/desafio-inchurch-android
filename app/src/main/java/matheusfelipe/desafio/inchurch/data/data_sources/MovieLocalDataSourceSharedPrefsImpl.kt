@@ -35,8 +35,6 @@ class MovieLocalDataSourceSharedPrefsImpl(
             hashSet
         ) as HashSet<String>
 
-        print(filter)
-        print(hashSet)
         return hashSet.map {
             gson.fromJson(it, MovieModel::class.java)
         }.filter { it.title.contains(filter, ignoreCase = true) }.toMutableList()
