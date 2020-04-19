@@ -116,9 +116,12 @@ class MoviesActivity : AppCompatActivity() {
     }
 
     private fun showError(throwable: Throwable?) {
-        pg_loading.visibility = View.GONE
-        ll_error.findViewById<TextView>(R.id.tv_error).text = throwable?.message
-        ll_error.visibility = View.VISIBLE
+
+        if(movieAdapter == null) {
+            pg_loading.visibility = View.GONE
+            ll_error.findViewById<TextView>(R.id.tv_error).text = throwable?.message
+            ll_error.visibility = View.VISIBLE
+        }
     }
 
     private fun showUpdateMovies(data: Any?) {
