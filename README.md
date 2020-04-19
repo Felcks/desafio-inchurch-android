@@ -33,28 +33,28 @@ Nessa parte do processo de recrutamento você desenvolverá uma aplicação Android.
 #
 * * *
 * ## Bibliotecas utilizadas
-    * Retrofit 2.6.0 - Para API, possui uma boa integração com Kotlin Coroutines
+    * Retrofit 2.6.0 - Para interface da API, possui uma boa integração com Kotlin Coroutines
     * OkHttp3 e Moshi - Suporte a api, um para trabalhar com cliente e Moshi para conversão de Json para objetos
     * Kotlin Coroutines - Programar assincronamente, principalmente na hora de fazer requisições
     * Kotlin Koin - Para injeção de dependência
     * Picasso - Loading de imagens (poderia ser o Glide também)
     * Mockk - Biblioteca de Mock para mockar objetos nos testes
-    * Junit 4.12 - Para testes
-    * LifeCycle - Para controle de ciclo de vida do view model
+    * Junit 4.12 - Testes
+    * LifeCycle - Para controle de ciclo de vida do viewmodel
     
 #
 * * *
 * ## Por quê Clean Architecture?
-    * O motivo a adoção da Clean Architecture foi para deixar o aplicativo com baixo acoplamento e mais testável 
+    * O motivo a adoção da Clean Architecture foi para deixar o aplicativo com baixo acoplamento
 #
 * * *
 * ## Observações
 * Há duas implementações para o MovieLocalDataSource. Isso porque uma implementação salva os favoritos na memória da aplicação, então ao fechar o aplicativo os favoritos são perdidos. Enquanto a outra implementação salva os favoritos no sharedPreferences. A implementação default é a com sharedPreferences. Porém, descomentando a primeira e comentando a segunda linha, o aplicativo passa a usar a implementação que salva na memória da aplicação.
-    ```javascript
-    // Linha 27 and 28 de DependencyModules 
-    // single<MovieLocalDataSource> { MovieLocalDataSourceImpl() }
-       single<MovieLocalDataSource> { MovieLocalDataSourceSharedPrefsImpl(get(), get()) }
-    ```
+```
+Linha 27 and 28 de DependencyModules 
+single<MovieLocalDataSource> { MovieLocalDataSourceImpl() }
+single<MovieLocalDataSource> { MovieLocalDataSourceSharedPrefsImpl(get(), get()) }
+```
 #
 * * *
 ## Email
