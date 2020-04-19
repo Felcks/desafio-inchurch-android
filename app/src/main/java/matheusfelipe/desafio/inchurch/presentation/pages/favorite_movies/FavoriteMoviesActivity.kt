@@ -112,6 +112,7 @@ class FavoriteMoviesActivity : AppCompatActivity() {
 
             setSearchableInfo(searchManager.getSearchableInfo(componentName))
             setIconifiedByDefault(false)
+            queryHint = "Search..."
             inputType = InputType.TYPE_TEXT_FLAG_CAP_WORDS
 
             val closeButton = findViewById<ImageView>(R.id.search_close_btn)
