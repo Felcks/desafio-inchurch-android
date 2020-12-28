@@ -10,7 +10,7 @@ data class MovieModel(
     val poster_path: String,
     val adult: Boolean,
     val overview: String,
-    val release_date: String,
+    val release_date: String?,
     val genre_ids: List<Int>,
     val id: Int,
     val original_title: String,
@@ -28,7 +28,9 @@ data class MovieModel(
             posterPath = poster_path,
             isAdult = adult,
             overview = overview,
-            releaseDate = SimpleDateFormat("yyyy-MM-dd").parse(release_date) ?: Date(),
+            releaseDate = if (release_date != null && release_date.isNotEmpty()) SimpleDateFormat("yyyy-MM-dd").parse(
+                release_date
+            ) else Date(),
             genreIds = genre_ids,
             id = id,
             originalTitle = original_title,
